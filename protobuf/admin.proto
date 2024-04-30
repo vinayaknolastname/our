@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+option go_package = "github.com/vinayakbot/admin";
+
+
+service AdminService{
+    rpc CreatePG(CreatePGRequest) returns (CommonResponse);
+}
+
+message CreatePGRequest {
+    string name = 1;
+    string user_name = 2;
+    string lat = 3;
+    string log = 4;
+    int32 phoneNumber = 5;
+    string email = 6;
+    int32 rent = 7;
+    bool isDeposite = 8;
+    bool verifiedPartner = 9;
+    map<string, string> address = 10;
+    repeated string images = 11;
+    map<string, string> features = 12;
+    string gender = 13;
+    string preferedBy = 14;
+    string ownerName = 15;
+    double rating = 16;
+    int32 totalBeds = 17;
+    map<string, string> emptyBeds = 18;
+}
+
+
+
+
+message CommonResponse{
+    int32 statusCode = 1;
+    bool success = 2;
+    string message = 3;
+}
+
+
