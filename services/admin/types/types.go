@@ -3,7 +3,7 @@ package types
 import (
 	"context"
 
-	admin "github.com/vinayakbot/our/services/common/admin"
+	admin "github.com/vinayaknolastname/our/services/common/admin"
 )
 
 type AdminService interface {

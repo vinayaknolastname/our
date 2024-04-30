@@ -1,8 +1,8 @@
 package gApi
 
 import (
-	"github.com/vinayakbot/our/services/common/admin"
-	"github.com/vinayakbot/our/services/common/db"
+	"github.com/vinayaknolastname/our/services/common/admin"
+	"github.com/vinayaknolastname/our/services/common/db"
 )
 
 type gAPI struct {

@@ -5,8 +5,8 @@ import (
 	"log"
 	"net"
 
-	"github.com/vinayaknolastname/our/common/admin"
 	gApi "github.com/vinayaknolastname/our/services/admin/gapi"
+	"github.com/vinayaknolastname/our/services/common/admin"
 	"github.com/vinayaknolastname/our/services/common/db"
 	"github.com/vinayaknolastname/our/utils"
 	"google.golang.org/grpc"

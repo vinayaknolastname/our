@@ -6,7 +6,8 @@ import (
 	"log"
 
 	_ "github.com/lib/pq"
-	"github.com/vinayakbot/our/services/common/models"
+
+	"github.com/vinayaknolastname/our/services/common/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	adminDb "github.com/vinayakbot/our/services/admin/db"
-	"github.com/vinayakbot/our/services/common/admin"
+	adminDb "github.com/vinayaknolastname/our/services/admin/db"
+	"github.com/vinayaknolastname/our/services/common/admin"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
