@@ -36,15 +36,15 @@ func ConnectDBFnc(dbstring string) *Storage {
 
 	if err != nil {
 
-		log.Printf("gorm error", err)
+		log.Fatalf("gorm error", err)
 	}
 
 	err = gormDB.AutoMigrate(&models.PgBasicModel{}, &models.PgAddressModel{}, &models.PgFeaturesModel{})
 
 	if err != nil {
-		log.Printf("autoMigrate error", err)
+		log.Fatalf("autoMigrate error", err)
 	}
-
+	log.Printf("autoMigrate done", err)
 	return &Storage{DB: db}
 
 }

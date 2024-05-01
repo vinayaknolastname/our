@@ -2,3 +2,41 @@ syntax = "proto3";
 
 option go_package = "github.com/vinayaknolastname/our/user";
 
+
+service UserService{
+    rpc CreateUser(CreateUserRequest) returns (UserResponse);
+}
+
+message CreateUserRequest {
+    string name = 1;
+    string user_name = 2;
+    string password = 3;
+    string authToken = 4;
+    int32 phoneNumber = 5;
+    
+}
+
+message User {
+    string name = 1;
+    string user_name = 2;
+    string password = 3;
+    string authToken = 4;
+    int32 phoneNumber = 5;
+    
+}
+
+message UserResponse{
+    int32 statusCode = 1;
+    bool success = 2;
+    string message = 3;
+    User data = 4;
+}
+
+message CommonResponse{
+    int32 statusCode = 1;
+    bool success = 2;
+    string message = 3;
+}
+
+
+

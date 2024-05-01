@@ -16,7 +16,7 @@ func NewDB() (*Database, error) {
 
 	postgresqlDbInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
-		"localhost", 5000, "postgres", "ourDB", "ourDB")
+		"localhost", 5432, "postgres", "ourDB", "ourDB")
 
 	db, err := sql.Open("postgres", postgresqlDbInfo)
 

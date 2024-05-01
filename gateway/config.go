@@ -1,9 +1,8 @@
 package main
 
-// type Config struct {
-// 	GrpcPort string `mapstructure:"GRPC_SERVER_ADDRESS"`
-// 	DBConfig *DBConfig
-// }
+type Config struct {
+	GatewayPort int32
+}
 
 // type DBConfig struct {
 // 	DBHost     string `mapstructure:"DB_Host"`

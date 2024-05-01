@@ -1,13 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net"
 
-	gApi "github.com/vinayaknolastname/our/services/admin/gapi"
-	"github.com/vinayaknolastname/our/services/common/admin"
-	"github.com/vinayaknolastname/our/services/common/db"
+	"github.com/vinayaknolastname/our/services/user/db"
+	gApi "github.com/vinayaknolastname/our/services/user/gapi"
+	user "github.com/vinayaknolastname/our/services/user/proto_gen"
+
 	"github.com/vinayaknolastname/our/utils"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -23,21 +23,21 @@ func main() {
 
 	// portStr := fmt.Sprintf("%d", config.DBConfig.DBPort)
 
-	postgresqlDbInfo := fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s dbname=%s sslmode=disable",
-		config.DBConfig.DBHost, config.DBConfig.DBPort, config.DBConfig.DBUSER, config.DBConfig.DBPASSWORD, config.DBConfig.DBNAME)
+	// postgresqlDbInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+	// 	"password=%s dbname=%s sslmode=disable",
+	// 	config.DBConfig.DBHost, config.DBConfig.DBPort, config.DBConfig.DBUSER, config.DBConfig.DBPASSWORD, config.DBConfig.DBNAME)
 
-	log.Println("db ddd %err ", postgresqlDbInfo)
+	storage, err := db.NewDB()
 
-	storage := db.ConnectDBFnc(postgresqlDbInfo)
-
-	storage.DB.Close()
+	if err != nil {
+		log.Println("db load error  %err ", err)
+	}
 
 	gRPCServer := grpc.NewServer()
 
-	server, err := gApi.NewServer(storage)
+	server, err := gApi.NewServer(*storage)
 
-	admin.RegisterAdminServiceServer(gRPCServer, server)
+	user.RegisterUserServiceServer(gRPCServer, server)
 
 	reflection.Register(gRPCServer)
 
