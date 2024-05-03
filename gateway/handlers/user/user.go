@@ -4,6 +4,6 @@ type User interface {
 	createNewUser()
 }
 
-func createNewUser(db.) {
-
+func createNewUser(user User) {
+	user.createNewUser()
 }
