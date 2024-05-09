@@ -4,7 +4,7 @@ import (
 	"flag"
 
 	"google.golang.org/grpc"
-	pb "google.golang.org/grpc/examples/route_guide/routeguide"
+	// pb "google.golang.org/grpc/examples/route_guide/routeguide"
 )
 
 var opts []grpc.DialOption

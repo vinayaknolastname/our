@@ -1,4 +1,4 @@
-package main
+package utils
 
 import (
 	nested "github.com/antonfisher/nested-logrus-formatter"

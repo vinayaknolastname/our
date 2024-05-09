@@ -1,7 +1,13 @@
-package main
+package utils
 
 type Config struct {
 	GatewayPort int32
+}
+
+func getConfig() *Config {
+	return &Config{
+		GatewayPort: 5000,
+	}
 }
 
 // type DBConfig struct {

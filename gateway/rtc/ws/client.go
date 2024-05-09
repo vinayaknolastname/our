@@ -1,6 +1,8 @@
 package ws
 
 import (
+	"log"
+
 	"github.com/gorilla/websocket"
 )
 
@@ -28,6 +30,32 @@ func (c *Client) writeMessage() {
 		if !ok {
 			return
 		}
+
+		c.Conn.WriteJSON(message)
+
+	}
+}
+func (c *Client) readMessage(h *Hub) {
+	defer func() {
+		h.Unregister <- c
+		c.Conn.Close()
+	}()
+
+	for {
+		_, m, err := c.Conn.ReadMessage()
+		if err != nil {
+			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+				log.Printf("ws err", err)
+			}
+		}
+
+		msg := &Message{
+			Content:  string(m),
+			RoomID:   c.RoomID,
+			Username: c.Username,
+		}
+
+		h.Broadcast <- msg
 
 	}
 }

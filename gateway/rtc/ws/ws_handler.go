@@ -1,6 +1,7 @@
 package ws
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -45,6 +46,7 @@ var upgrader = websocket.Upgrader{
 }
 
 func (h *Handler) JoinRoom(c *gin.Context) {
+	fmt.Println("Helleo")
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 
 	if err != nil {
@@ -52,7 +54,7 @@ func (h *Handler) JoinRoom(c *gin.Context) {
 		return
 	}
 
-	roomID := c.Param("roomID")
+	roomID := c.Param("roomId")
 	clientID := c.Query("userID")
 	username := c.Query("username")
 
@@ -73,4 +75,7 @@ func (h *Handler) JoinRoom(c *gin.Context) {
 	h.hub.Register <- cl
 
 	h.hub.Broadcast <- m
+
+	go cl.writeMessage()
+	cl.readMessage(h.hub)
 }
