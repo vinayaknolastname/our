@@ -9,27 +9,19 @@ service UserService{
 
 message CreateUserRequest {
     string name = 1;
-    string user_name = 2;
-    string password = 3;
-    string authToken = 4;
-    int32 phoneNumber = 5;
+    int32 phoneNumber = 2;
     
 }
 
 message User {
-    string name = 1;
-    string user_name = 2;
-    string password = 3;
-    string authToken = 4;
-    int32 phoneNumber = 5;
-    
+    string id = 1;
+    string name = 2;
+    int32 phoneNumber = 3;
 }
 
 message UserResponse{
-    int32 statusCode = 1;
-    bool success = 2;
-    string message = 3;
-    User data = 4;
+    CommonResponse resData = 1;
+    User data = 2;
 }
 
 message CommonResponse{

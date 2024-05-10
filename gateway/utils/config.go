@@ -4,7 +4,7 @@ type Config struct {
 	GatewayPort int32
 }
 
-func getConfig() *Config {
+func GetConfig() *Config {
 	return &Config{
 		GatewayPort: 5000,
 	}

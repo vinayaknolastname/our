@@ -1,4 +1,4 @@
-package utils
+package router
 
 import (
 	"fmt"
@@ -8,7 +8,9 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	grpcHandlers "github.com/vinayaknolastname/our/gateway/grpc"
 	"github.com/vinayaknolastname/our/gateway/rtc/ws"
+	"github.com/vinayaknolastname/our/gateway/utils"
 )
 
 // const routes (
@@ -48,6 +50,7 @@ func InitRouter(wshandler ws.Handler) {
 		user.GET("/", func(ctx *gin.Context) {
 			ctx.JSON(http.StatusOK, gin.H{"message": "hello"})
 		})
+		user.POST("/createUser", grpcHandlers.ConnectUserServiceGrpc, grpcHandlers.CreateUser)
 	}
 	{
 		ws := router.Group("/ws")
@@ -56,7 +59,7 @@ func InitRouter(wshandler ws.Handler) {
 		ws.GET("getRooms", wshandler.GetRooms)
 
 	}
-	port := getConfig().GatewayPort
+	port := utils.GetConfig().GatewayPort
 
 	portToRun := fmt.Sprint(":", port)
 

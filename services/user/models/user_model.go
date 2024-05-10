@@ -3,12 +3,7 @@ package models
 type UsersModel struct {
 	ID          uint   `gorm:"PRIMARY_KEY;auto_increment;unique"`
 	Name        string `gorm:"NOT NULL"`
-	UserName    string `gorm:"NOT NULL"`
 	PhoneNumber int32  `gorm:"NOT NULL;index"`
-	Password    string `gorm:"NOT NULL"`
-
-	Email     string `gorm:"DEFAULT:NULL"`
-	AuthToken string `gorm:"DEFFAULT:NULL"`
 }
 
 // type PgAddressModel struct {

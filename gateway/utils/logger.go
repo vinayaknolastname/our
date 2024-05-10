@@ -17,3 +17,11 @@ func InitLog() {
 		CallerFirst:     true,
 	})
 }
+
+func LogSomething(message string, err any, logType int) {
+
+	log.Println(message, err)
+}
+
+/// 0 - err
+// 1 - msg

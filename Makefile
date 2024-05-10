@@ -5,6 +5,7 @@ gen-proto-admin:
 		--go-grpc_out=services/common/admin --go-grpc_opt=paths=source_relative \
 
 
+////wlas uae linux
 gen-proto-user:
 	@protoc	\
 		--proto_path=protobuf "protobuf/user.proto" \

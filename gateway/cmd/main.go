@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
+	"github.com/vinayaknolastname/our/gateway/router"
 	"github.com/vinayaknolastname/our/gateway/rtc/ws"
-	"github.com/vinayaknolastname/our/gateway/utils"
 )
 
 func main() {
@@ -18,7 +18,7 @@ func main() {
 	hub := ws.NewHub()
 	wshandler := ws.NewHandler(hub)
 
-	utils.InitRouter(*wshandler)
+	router.InitRouter(*wshandler)
 	go hub.Run()
 
 	// if err != nil {

@@ -3,6 +3,8 @@ package grpcHandlers
 import (
 	"flag"
 
+	"github.com/gin-gonic/gin"
+	"github.com/vinayaknolastname/our/gateway/utils"
 	"google.golang.org/grpc"
 	// pb "google.golang.org/grpc/examples/route_guide/routeguide"
 )
@@ -16,11 +18,28 @@ var (
 	serverHostOverride = flag.String("server_host_override", "x.test.example.com", "The server name used to verify the hostname returned by the TLS handshake")
 )
 
-func ConnectUserServiceGrpc() {
+type UserGrpcService struct {
+	conn *grpc.ClientConn
+}
 
-	conn, err := grpc.Dial(*serverAddr, opts...)
-	if err != nil {
+var connection UserGrpcService
+
+func ConnectUserServiceGrpc(c *gin.Context) {
+	utils.LogSomething("Calling ConnectUserServiceGrpc", connection.conn, 1)
+
+	if connection.conn == nil {
+		conn, err := grpc.Dial(*serverAddr, grpc.WithInsecure())
+		if err != nil {
+			utils.LogSomething("Connecting Grpc User Dial Err", err, 0)
+		}
+		connection = UserGrpcService{conn: conn}
 
 	}
-	defer conn.Close()
+
+	utils.LogSomething("Connecting Grpc User Dial Err", connection.conn, 0)
+	c.Next()
+}
+
+func CreateUser(c *gin.Context) {
+	utils.LogSomething("dd", "sdd", 0)
 }
