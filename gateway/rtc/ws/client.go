@@ -1,6 +1,7 @@
 package ws
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/gorilla/websocket"
@@ -30,7 +31,7 @@ func (c *Client) writeMessage() {
 		if !ok {
 			return
 		}
-
+		fmt.Println("msg", message)
 		c.Conn.WriteJSON(message)
 
 	}

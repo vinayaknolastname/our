@@ -21,20 +21,21 @@ func InitRouter(wshandler ws.Handler) {
 
 	router := gin.Default()
 
-	// router := gin.New(	)
-
-	router.Use(gin.Logger())
-
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5000"},
+		AllowOrigins:     []string{"*"},
 		AllowMethods:     []string{"GET", "POST"},
 		AllowHeaders:     []string{"Content-Type"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
 		AllowOriginFunc: func(origin string) bool {
+			return true
 			return origin == "http://localhost:5000"
 		},
 		MaxAge: 12 * time.Hour}))
+
+	// router := gin.New(	)
+
+	router.Use(gin.Logger())
 
 	router.Use(gin.Recovery())
 
@@ -52,6 +53,8 @@ func InitRouter(wshandler ws.Handler) {
 		ws := router.Group("/ws")
 		ws.POST("createRoom", wshandler.CreateRoom)
 		ws.GET("joinRoom/:roomId", wshandler.JoinRoom)
+		ws.GET("getRooms", wshandler.GetRooms)
+
 	}
 	port := getConfig().GatewayPort
 
