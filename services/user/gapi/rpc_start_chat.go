@@ -9,7 +9,7 @@ import (
 	"github.com/vinayaknolastname/our/utils"
 )
 
-func (server *gAPI) CreateUser(ctx context.Context, req *user.CreateUserRequest) (*user.UserResponse, error) {
+func (server *gAPI) StartChat(ctx context.Context, req *user.StartChatRequest) (*user.CommonResponse, error) {
 
 	query := db.CreateUserQuery()
 	result, err := server.Db.Db.Exec(query, req.GetName(), req.GetPhoneNumber())

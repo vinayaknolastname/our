@@ -1,10 +1,13 @@
 package grpcHandlers
 
 import (
+	context "context"
 	"flag"
+	"log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/vinayaknolastname/our/gateway/utils"
+	user "github.com/vinayaknolastname/our/services/user/proto_gen"
 	"google.golang.org/grpc"
 	// pb "google.golang.org/grpc/examples/route_guide/routeguide"
 )
@@ -19,7 +22,8 @@ var (
 )
 
 type UserGrpcService struct {
-	conn *grpc.ClientConn
+	conn              *grpc.ClientConn
+	userServiceClient *user.UserServiceClient
 }
 
 var connection UserGrpcService
@@ -28,6 +32,8 @@ func ConnectUserServiceGrpc(c *gin.Context) {
 	utils.LogSomething("Calling ConnectUserServiceGrpc", connection.conn, 1)
 
 	if connection.conn == nil {
+		utils.LogSomething("Connection is nil Connecting user service", connection.conn, 1)
+
 		conn, err := grpc.Dial(*serverAddr, grpc.WithInsecure())
 		if err != nil {
 			utils.LogSomething("Connecting Grpc User Dial Err", err, 0)
@@ -36,10 +42,33 @@ func ConnectUserServiceGrpc(c *gin.Context) {
 
 	}
 
-	utils.LogSomething("Connecting Grpc User Dial Err", connection.conn, 0)
+	utils.LogSomething("Connecting Grpc User Dial Err", "connection.conn", 0)
 	c.Next()
 }
 
+type CommonResponse struct {
+	statusCode int32  `json:"statusCode"`
+	success    bool   `json:"success"`
+	message    string `json:"message"`
+}
+
 func CreateUser(c *gin.Context) {
-	utils.LogSomething("dd", "sdd", 0)
+	utils.LogSomething("Create User Start", "", 1)
+
+	client := user.NewUserServiceClient(connection.conn)
+	resp, err := client.CreateUser(context.Background(), &user.CreateUserRequest{Name: "Alice", PhoneNumber: 991881000})
+	if err != nil {
+		log.Fatalf("Failed to call SayHello: %v", err)
+	}
+
+	log.Printf("Response from server: %s", resp)
+	// respto := CommonResponse{
+	// 	statusCode: resp.ResData.StatusCode,
+	// 	success:    resp.ResData.Success,
+	// 	message:    resp.ResData.Message,
+	// }
+
+	utils.LogSomething("Grpc res into User", resp, 1)
+
+	c.JSON(int(resp.ResData.StatusCode), resp.ResData)
 }

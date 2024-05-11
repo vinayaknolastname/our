@@ -5,13 +5,16 @@ option go_package = "github.com/vinayaknolastname/our/user";
 
 service UserService{
     rpc CreateUser(CreateUserRequest) returns (UserResponse);
+    rpc StartChat(StartChatRequest) returns (CommonResponse);
+
 }
 
 message CreateUserRequest {
     string name = 1;
     int32 phoneNumber = 2;
-    
 }
+
+
 
 message User {
     string id = 1;
@@ -21,7 +24,6 @@ message User {
 
 message UserResponse{
     CommonResponse resData = 1;
-    User data = 2;
 }
 
 message CommonResponse{
@@ -31,4 +33,9 @@ message CommonResponse{
 }
 
 
+message StartChatRequest {
+    string name = 1;
+    int32 type = 2;
+    repeated string members = 3;
+}
 
