@@ -11,19 +11,24 @@ import (
 
 func (server *gAPI) StartChat(ctx context.Context, req *user.StartChatRequest) (*user.CommonResponse, error) {
 
-	query := db.CreateUserQuery()
-	result, err := server.Db.Db.Exec(query, req.GetName(), req.GetPhoneNumber())
+	query := db.CreateChatQuery()
+	var id int
+	result := server.Db.Db.QueryRow(query, req.GetName(), req.GetMembers()).Scan(&id)
 
+	err := result
 	if err != nil {
-		utils.LogSomething("err in creating pg", err.Error(), 0)
+		utils.LogSomething("err in creating chat", err, 1)
 	}
 
-	utils.LogSomething("user created", result, 0)
-	response := &user.UserResponse{ResData: &user.CommonResponse{
-		StatusCode: http.StatusOK,
-		Success:    true,
-		Message:    "User Created",
-	}}
+	// if result.Err() != nil {
+	// 	utils.LogSomething("err in creating pg", result.Err(), 0)
+	// }
+
+	utils.LogSomething("chat created", result, 0)
+	response := &user.CommonResponse{StatusCode: http.StatusOK,
+		Success: true,
+		Message: "chat created",
+	}
 
 	utils.LogSomething("user response", response, 1)
 
