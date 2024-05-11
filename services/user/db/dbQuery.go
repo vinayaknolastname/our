@@ -6,6 +6,16 @@ func CreateUserQuery() string {
 	VALUES( $1 , $2 )`
 }
 
+func GetUserQuery() string {
+
+	return `SELECT * FROM users_models WHERE id=$1`
+}
+
+func GetChatRowQuery() string {
+
+	return `SELECT * FROM chats_models WHERE id=$1`
+}
+
 func AddChatInUser() string {
 
 	return `SELECT chats FROM users_models WHERE id=$1`

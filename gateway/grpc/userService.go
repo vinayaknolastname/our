@@ -5,6 +5,7 @@ import (
 	"flag"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/vinayaknolastname/our/gateway/utils"
@@ -77,12 +78,13 @@ func CreateUser(c *gin.Context) {
 func GetUserAndChats(c *gin.Context) {
 	utils.LogSomething("Create User Start", "", 1)
 
-	// userId := c.Param("userId")
+	userId := c.Param("userId")
+	intUserId, err := strconv.Atoi(userId)
 
 	client := user.NewUserServiceClient(connection.conn)
-	resp, err := client.CreateUser(context.Background(), &user.CreateUserRequest{Name: "Alice", PhoneNumber: 991881000})
+	resp, err := client.GetUserData(context.Background(), &user.GetUserRequest{UserId: int32(intUserId)})
 	if err != nil {
-		log.Fatalf("Failed to call SayHello: %v", err)
+		log.Fatalf("Failed to call GetUserAndChats: %v", err)
 	}
 
 	log.Printf("Response from server: %s", resp)
@@ -92,9 +94,9 @@ func GetUserAndChats(c *gin.Context) {
 	// 	message:    resp.ResData.Message,
 	// }
 
-	utils.LogSomething("Grpc res into User", resp, 1)
+	utils.LogSomething("Grpc res into getUserChats", resp, 1)
 
-	c.JSON(int(resp.ResData.StatusCode), resp.ResData)
+	c.JSON(int(resp.ResData.StatusCode), resp)
 }
 
 type StartChatRequest struct {

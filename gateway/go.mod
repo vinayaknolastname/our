@@ -5,6 +5,7 @@ go 1.22.2
 require (
 	github.com/lib/pq v1.10.9
 	github.com/sirupsen/logrus v1.9.3
+	github.com/vinayaknolastname/our v0.0.0-20240511131102-ad71b55ecc80
 )
 
 require (
@@ -46,7 +47,6 @@ require (
 	github.com/gin-contrib/cors v1.7.2
 	github.com/gin-gonic/gin v1.9.1
 	github.com/gorilla/websocket v1.5.1
-	github.com/vinayaknolastname/our v0.0.0-20240511090942-386b51fef760
 	golang.org/x/sys v0.19.0 // indirect
 	google.golang.org/grpc v1.63.2
 )
