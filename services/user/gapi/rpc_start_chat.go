@@ -3,7 +3,9 @@ package gApi
 import (
 	"context"
 	"net/http"
+	"strconv"
 
+	"github.com/lib/pq"
 	"github.com/vinayaknolastname/our/services/user/db"
 	user "github.com/vinayaknolastname/our/services/user/proto_gen"
 	"github.com/vinayaknolastname/our/utils"
@@ -13,11 +15,28 @@ func (server *gAPI) StartChat(ctx context.Context, req *user.StartChatRequest) (
 
 	query := db.CreateChatQuery()
 	var id int
-	result := server.Db.Db.QueryRow(query, req.GetName(), req.GetMembers()).Scan(&id)
 
+	utils.LogSomething("err in creating chat", req.GetName(), 1)
+
+	result := server.Db.Db.QueryRow(query, req.GetName(), req.GetType(), pq.Array(req.GetMembers()))
+	result.Scan(&id)
 	err := result
 	if err != nil {
 		utils.LogSomething("err in creating chat", err, 1)
+	}
+
+	for i := 0; i < len(req.GetMembers()); i++ {
+		var userId = req.GetMembers()[i]
+		utils.LogSomething("Mebers", userId, 1)
+		utils.LogSomething("ChatID", id, 1)
+
+		userIdInt, err := strconv.Atoi(userId)
+
+		if err != nil {
+			utils.LogSomething("Mebers", userId, 1)
+
+		}
+		server.AddChatInUsersModel(userIdInt, id)
 	}
 
 	// if result.Err() != nil {

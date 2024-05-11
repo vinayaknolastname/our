@@ -51,6 +51,8 @@ func InitRouter(wshandler ws.Handler) {
 			ctx.JSON(http.StatusOK, gin.H{"message": "hello"})
 		})
 		user.POST("/createUser", grpcHandlers.ConnectUserServiceGrpc, grpcHandlers.CreateUser)
+		user.POST("/startChat", grpcHandlers.ConnectUserServiceGrpc, grpcHandlers.StartChat)
+
 	}
 	{
 		ws := router.Group("/ws")

@@ -1,10 +1,12 @@
 package models
 
+import "github.com/lib/pq"
+
 type UsersModel struct {
-	ID          uint   `gorm:"PRIMARY_KEY;auto_increment;unique"`
-	Name        string `gorm:"NOT NULL"`
-	PhoneNumber int32  `gorm:"NOT NULL;index"`
-	Chats       []int  `gorm:"type:int[];index;fk:chat_models(id)"`
+	ID          int32         `gorm:"PRIMARY_KEY;auto_increment;unique"`
+	Name        string        `gorm:"NOT NULL"`
+	PhoneNumber int32         `gorm:"NOT NULL;index"`
+	Chats       pq.Int32Array `gorm:"type:int[];index;fk:chat_models(id)"`
 }
 
 // type PgAddressModel struct {

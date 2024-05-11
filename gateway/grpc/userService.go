@@ -4,6 +4,7 @@ import (
 	context "context"
 	"flag"
 	"log"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/vinayaknolastname/our/gateway/utils"
@@ -73,13 +74,27 @@ func CreateUser(c *gin.Context) {
 	c.JSON(int(resp.ResData.StatusCode), resp.ResData)
 }
 
+type StartChatRequest struct {
+	Name     string   `json:"name"`
+	ChatType int      `json:"type"`
+	Members  []string `json:"members"`
+}
+
 func StartChat(c *gin.Context) {
-	utils.LogSomething("Started User Start", "", 1)
+
+	var req StartChatRequest
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+
+		c.JSON(http.StatusBadGateway, gin.H{"error": err.Error()})
+		return
+	}
+	utils.LogSomething("Started Start Chat Request", req, 1)
 
 	client := user.NewUserServiceClient(connection.conn)
-	resp, err := client.CreateUser(context.Background(), &user.CreateUserRequest{Name: "Alice", PhoneNumber: 991881000})
+	resp, err := client.StartChat(context.Background(), &user.StartChatRequest{Name: req.Name, Type: int32(req.ChatType), Members: req.Members})
 	if err != nil {
-		log.Fatalf("Failed to call SayHello: %v", err)
+		log.Fatalf("Failed to call Start Chat: %v", err)
 	}
 
 	log.Printf("Response from server: %s", resp)
@@ -91,5 +106,5 @@ func StartChat(c *gin.Context) {
 
 	utils.LogSomething("Grpc res into User", resp, 1)
 
-	c.JSON(int(resp.ResData.StatusCode), resp.ResData)
+	c.JSON(int(resp.StatusCode), resp)
 }
