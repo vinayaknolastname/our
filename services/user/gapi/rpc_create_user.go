@@ -3,6 +3,7 @@ package gApi
 import (
 	"context"
 	"net/http"
+	"sync"
 
 	"github.com/vinayaknolastname/our/services/user/db"
 	user "github.com/vinayaknolastname/our/services/user/proto_gen"
@@ -31,7 +32,10 @@ func (server *gAPI) CreateUser(ctx context.Context, req *user.CreateUserRequest)
 	return response, nil
 }
 
+var mutex sync.Mutex
+
 func (server *gAPI) AddChatInUsersModel(userId, chatId int) {
+	// mutex.Lock()
 	// query := db.AddChatInUser()
 	// var chats []uint8
 	// err := server.Db.Db.QueryRow(query, userId).Scan(&chats)
@@ -90,5 +94,6 @@ func (server *gAPI) AddChatInUsersModel(userId, chatId int) {
 	// if result != nil {
 	// 	utils.LogSomething("err in add chat in Users Model", result, 0)
 	// }
+	// mutex.Unlock()
 
 }

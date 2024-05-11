@@ -74,6 +74,29 @@ func CreateUser(c *gin.Context) {
 	c.JSON(int(resp.ResData.StatusCode), resp.ResData)
 }
 
+func GetUserAndChats(c *gin.Context) {
+	utils.LogSomething("Create User Start", "", 1)
+
+	// userId := c.Param("userId")
+
+	client := user.NewUserServiceClient(connection.conn)
+	resp, err := client.CreateUser(context.Background(), &user.CreateUserRequest{Name: "Alice", PhoneNumber: 991881000})
+	if err != nil {
+		log.Fatalf("Failed to call SayHello: %v", err)
+	}
+
+	log.Printf("Response from server: %s", resp)
+	// respto := CommonResponse{
+	// 	statusCode: resp.ResData.StatusCode,
+	// 	success:    resp.ResData.Success,
+	// 	message:    resp.ResData.Message,
+	// }
+
+	utils.LogSomething("Grpc res into User", resp, 1)
+
+	c.JSON(int(resp.ResData.StatusCode), resp.ResData)
+}
+
 type StartChatRequest struct {
 	Name     string   `json:"name"`
 	ChatType int      `json:"type"`

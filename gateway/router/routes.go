@@ -51,13 +51,16 @@ func InitRouter(wshandler ws.Handler) {
 			ctx.JSON(http.StatusOK, gin.H{"message": "hello"})
 		})
 		user.POST("/createUser", grpcHandlers.ConnectUserServiceGrpc, grpcHandlers.CreateUser)
+		user.GET("/getUserAndChats/:userId", grpcHandlers.ConnectUserServiceGrpc, grpcHandlers.CreateUser)
 		user.POST("/startChat", grpcHandlers.ConnectUserServiceGrpc, grpcHandlers.StartChat)
+		// user.GET("/getUserChats/:chatId", grpcHandlers.ConnectUserServiceGrpc, grpcHandlers.CreateUser)
+		// user.GET("/join/:chatId", grpcHandlers.ConnectUserServiceGrpc, grpcHandlers.CreateUser)
 
 	}
 	{
 		ws := router.Group("/ws")
 		ws.POST("createRoom", wshandler.CreateRoom)
-		ws.GET("joinRoom/:roomId", wshandler.JoinRoom)
+		ws.GET("joinRoom/:chatId", wshandler.JoinRoom)
 		ws.GET("getRooms", wshandler.GetRooms)
 
 	}

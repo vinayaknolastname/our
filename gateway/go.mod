@@ -46,7 +46,7 @@ require (
 	github.com/gin-contrib/cors v1.7.2
 	github.com/gin-gonic/gin v1.9.1
 	github.com/gorilla/websocket v1.5.1
-	github.com/vinayaknolastname/our v0.0.0-20240511022101-197834a70f32
+	github.com/vinayaknolastname/our v0.0.0-20240511090942-386b51fef760
 	golang.org/x/sys v0.19.0 // indirect
 	google.golang.org/grpc v1.63.2
 )

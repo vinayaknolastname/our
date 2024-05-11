@@ -6,7 +6,7 @@ option go_package = "github.com/vinayaknolastname/our/user";
 service UserService{
     rpc CreateUser(CreateUserRequest) returns (UserResponse);
     rpc StartChat(StartChatRequest) returns (CommonResponse);
-
+    rpc GetUserData(GetUserRequest) returns (GetUserResponse);
 }
 
 message CreateUserRequest {
@@ -15,12 +15,30 @@ message CreateUserRequest {
 }
 
 
+message GetUserRequest{
+    int32 userId = 1;
+}
+
+message GetUserResponse{
+    CommonResponse resData = 1;
+    User userData = 2;
+}
 
 message User {
     string id = 1;
     string name = 2;
     int32 phoneNumber = 3;
+    repeated Chats chat = 4;
 }
+
+
+message Chats {
+    int32 id = 1;
+    string name = 2;
+    int32 type = 3;
+    repeated int32 members = 4;
+}
+
 
 message UserResponse{
     CommonResponse resData = 1;

@@ -25,8 +25,11 @@ func (server *gAPI) StartChat(ctx context.Context, req *user.StartChatRequest) (
 		utils.LogSomething("err in creating chat", err, 1)
 	}
 
-	for i := 0; i < len(req.GetMembers()); i++ {
-		var userId = req.GetMembers()[i]
+	listOfStringedMembers := req.GetMembers()
+	// var wg sync.WaitGroup
+	for i := 0; i < len(listOfStringedMembers); i++ {
+		// wg.Add(1)
+		var userId = listOfStringedMembers[i]
 		utils.LogSomething("Mebers", userId, 1)
 		utils.LogSomething("ChatID", id, 1)
 
@@ -38,6 +41,7 @@ func (server *gAPI) StartChat(ctx context.Context, req *user.StartChatRequest) (
 		}
 		server.AddChatInUsersModel(userIdInt, id)
 	}
+	// wg.Wait()
 
 	// if result.Err() != nil {
 	// 	utils.LogSomething("err in creating pg", result.Err(), 0)
