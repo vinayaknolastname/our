@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
@@ -18,7 +19,7 @@ func NewHandler(h *WsManager) *Handler {
 }
 
 type CreateRoomReq struct {
-	ID   string `json:"id"`
+	ID   int32  `json:"id"`
 	Name string `json:"name"`
 }
 
@@ -36,7 +37,7 @@ func (h *Handler) CreateRoom(c *gin.Context) {
 	h.manager.Chats[req.ID] = &Chat{
 		ID:      req.ID,
 		Name:    req.Name,
-		Clients: make(map[string]*Client),
+		Clients: make(map[int32]*Client),
 	}
 	c.JSON(http.StatusOK, req)
 }
@@ -59,21 +60,24 @@ func (h *Handler) StartChat(c *gin.Context) {
 	}
 
 	chatId := c.Param("chatId")
+	intCHatID, err := strconv.Atoi(chatId)
 	clientID := c.Query("userID")
+	intClientID, err := strconv.Atoi(clientID)
+
 	username := c.Query("username")
-	CheckChatIsLive(h, chatId)
+	CheckChatIsLive(h, int32(intCHatID))
 	log.Println("chats", h.manager.Chats)
 	cl := &Client{
 		Conn:     conn,
-		ChatId:   chatId,
+		ChatId:   int32(intCHatID),
 		Username: username,
-		ID:       clientID,
+		ID:       int32(intClientID),
 		Message:  make(chan *Message, 10),
 	}
 	log.Println("chats", cl)
 	m := &Message{
 		Content:  "A new user joined",
-		ChatId:   chatId,
+		ChatId:   int32(intCHatID),
 		Username: username,
 	}
 	log.Println("chats", m)
@@ -85,12 +89,12 @@ func (h *Handler) StartChat(c *gin.Context) {
 	cl.readMessage(h.manager)
 }
 
-func CheckChatIsLive(h *Handler, chatId string) {
+func CheckChatIsLive(h *Handler, chatId int32) {
 	if _, ok := h.manager.Chats[chatId]; ok == false {
 		h.manager.Chats[chatId] = &Chat{
 			ID:      chatId,
-			Name:    chatId,
-			Clients: make(map[string]*Client),
+			Name:    string(chatId),
+			Clients: make(map[int32]*Client),
 		}
 		return
 	} else {
@@ -99,7 +103,7 @@ func CheckChatIsLive(h *Handler, chatId string) {
 }
 
 type RoomRes struct {
-	ID   string `json:"id"`
+	ID   int32  `json:"id"`
 	Name string `json:"name"`
 }
 

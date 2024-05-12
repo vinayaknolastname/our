@@ -3,12 +3,12 @@ package ws
 import (
 	"log"
 
-	grpcHandlers "github.com/vinayaknolastname/our/gateway/grpc"
+	// grpcHandlers "github.com/vinayaknolastname/our/gateway/grpc"
 	"github.com/vinayaknolastname/our/gateway/utils"
 )
 
 type WsManager struct {
-	Chats      map[string]*Chat
+	Chats      map[int32]*Chat
 	Register   chan *Client
 	Unregister chan *Client
 	Message    chan *Message
@@ -18,7 +18,7 @@ type WsManager struct {
 
 func NewWsManager() *WsManager {
 	return &WsManager{
-		Chats:      make(map[string]*Chat),
+		Chats:      make(map[int32]*Chat),
 		Register:   make(chan *Client),
 		Unregister: make(chan *Client),
 		Message:    make(chan *Message),
@@ -66,9 +66,10 @@ func (w *WsManager) RunWsManager() {
 		// 	close(cl.Message)
 
 		case m := <-w.Message:
-			utils.LogSomething("msg", w.Chats["2"].Clients, 1)
+			utils.LogSomething("msg", w.Chats[2].Clients, 1)
 			if _, ok := w.Chats[m.ChatId]; ok {
-				checkOtherUserIsConnectedOrNot()
+				membersOfChat := w.Chats[m.ChatId].Members
+				checkOtherUserIsConnectedOrNot(membersOfChat, m.ChatId, w.Chats[m.ChatId].Clients, m.Content, m.SenderId)
 				for _, cl := range w.Chats[m.ChatId].Clients {
 
 					cl.Message <- m
@@ -79,18 +80,21 @@ func (w *WsManager) RunWsManager() {
 	}
 }
 
-func checkOtherUserIsConnectedOrNot(userId int32, chatId int32, clientsOfChat []*Client, content string) {
-	for i := 0; i < len(clientsOfChat); i++ {
-		if string(userId) == clientsOfChat[i].ID {
-			grpcHandlers.CreateMessage(userId, chatId, content, true)
+func checkOtherUserIsConnectedOrNot(membersOfChat []int32, chatId int32, clientsOfChat map[int32]*Client, content string, userId int32) {
+	var tempDeliveredList []int32
+	for i := 0; i < len(membersOfChat); i++ {
+		if _, ok := clientsOfChat[membersOfChat[i]]; ok {
+
+			tempDeliveredList = append(tempDeliveredList, membersOfChat[i])
 		}
 	}
 }
 
 type Chat struct {
-	ID      string             `json:"id"`
-	Name    string             `json:"name"`
-	Clients map[string]*Client `json:"client"`
+	ID      int32             `json:"id"`
+	Name    string            `json:"name"`
+	Clients map[int32]*Client `json:"client"`
+	Members []int32           `json:"members"`
 }
 
 // type Hub struct {

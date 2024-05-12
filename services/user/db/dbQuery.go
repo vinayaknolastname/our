@@ -6,6 +6,12 @@ func CreateUserQuery() string {
 	VALUES( $1 , $2 )`
 }
 
+func CreateMessageQuery() string {
+
+	return `INSERT INTO message_models( name , 	content , chat_id , sender_id , date_time , delivered_too , readed_by , is_deleted , seq )
+	VALUES( $1 , $2 ,  $3) RETURNING id`
+}
+
 func GetUserQuery() string {
 
 	return `SELECT * FROM users_models WHERE id=$1`

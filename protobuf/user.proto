@@ -15,7 +15,7 @@ message CreateMessageRequest{
     int32 userId = 1;
     int32 chatId = 2;
     string content = 3;
-    bool isDelivered = 4;
+    repeated int32 isDelivered = 4;
 }
 
 message GetMessageRequest{

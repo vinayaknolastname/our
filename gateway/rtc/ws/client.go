@@ -11,15 +11,15 @@ import (
 type Client struct {
 	Conn     *websocket.Conn
 	Message  chan *Message
-	ID       string `json:id`
-	ChatId   string `json:roomId`
+	ID       int32  `json:id`
+	ChatId   int32  `json:roomId`
 	Username string `json:"username"`
 }
 
 type Message struct {
 	Id          int32                `json:"id"`
 	Content     string               `json:"content"`
-	ChatId      string               `json:"roomID"`
+	ChatId      int32                `json:"roomID"`
 	Username    string               `json:"username"`
 	SenderId    int32                `json:"senderId"`
 	DateTime    *timestamp.Timestamp `json:"dateTime"`

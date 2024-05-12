@@ -134,14 +134,14 @@ func StartChat(c *gin.Context) {
 	c.JSON(int(resp.StatusCode), resp)
 }
 
-func CreateMessage(userId int32, chatId int32, content string, isDelivered bool) {
+func CreateMessage(userId int32, chatId int32, content string, isDelivered []int) {
 	utils.LogSomething("Create Message", "", 1)
 
 	// userId := c.Param("userId")
 	// intUserId, err := strconv.Atoi(userId)
 
 	client := user.NewUserServiceClient(connection.conn)
-	resp, err := client.SendMessage(context.Background(), &user.CreateMessageRequest{UserId: userId, ChatId: chatId, Content: content})
+	resp, err := client.SendMessage(context.Background(), &user.CreateMessageRequest{UserId: userId, ChatId: chatId, Content: content, IsDelivered: isDelivered})
 	if err != nil {
 		log.Fatalf("Failed to call CreateMessage: %v", err)
 	}
