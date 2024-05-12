@@ -134,7 +134,7 @@ func StartChat(c *gin.Context) {
 	c.JSON(int(resp.StatusCode), resp)
 }
 
-func CreateMessage(userId int32, chatId int32, content string) {
+func CreateMessage(userId int32, chatId int32, content string, isDelivered bool) {
 	utils.LogSomething("Create Message", "", 1)
 
 	// userId := c.Param("userId")

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/gorilla/websocket"
 )
 
@@ -16,9 +17,16 @@ type Client struct {
 }
 
 type Message struct {
-	Content  string `json:"content"`
-	ChatId   string `json:"roomID"`
-	Username string `json:"username"`
+	Id          int32                `json:"id"`
+	Content     string               `json:"content"`
+	ChatId      string               `json:"roomID"`
+	Username    string               `json:"username"`
+	SenderId    int32                `json:"senderId"`
+	DateTime    *timestamp.Timestamp `json:"dateTime"`
+	DeliveredTo []int32              `json:"deliveredTo"`
+	ReadedBy    []int32              `json:"readedBy"`
+	IsDeleted   bool                 `json:"isDeleted"`
+	Seq         int32                `json:"seq"`
 }
 
 func (c *Client) writeMessage() {

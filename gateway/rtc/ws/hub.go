@@ -3,6 +3,7 @@ package ws
 import (
 	"log"
 
+	grpcHandlers "github.com/vinayaknolastname/our/gateway/grpc"
 	"github.com/vinayaknolastname/our/gateway/utils"
 )
 
@@ -67,13 +68,21 @@ func (w *WsManager) RunWsManager() {
 		case m := <-w.Message:
 			utils.LogSomething("msg", w.Chats["2"].Clients, 1)
 			if _, ok := w.Chats[m.ChatId]; ok {
-
+				checkOtherUserIsConnectedOrNot()
 				for _, cl := range w.Chats[m.ChatId].Clients {
 
 					cl.Message <- m
 				}
 			}
 
+		}
+	}
+}
+
+func checkOtherUserIsConnectedOrNot(userId int32, chatId int32, clientsOfChat []*Client, content string) {
+	for i := 0; i < len(clientsOfChat); i++ {
+		if string(userId) == clientsOfChat[i].ID {
+			grpcHandlers.CreateMessage(userId, chatId, content, true)
 		}
 	}
 }
