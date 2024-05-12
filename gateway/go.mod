@@ -5,7 +5,7 @@ go 1.22.2
 require (
 	github.com/lib/pq v1.10.9
 	github.com/sirupsen/logrus v1.9.3
-	github.com/vinayaknolastname/our v0.0.0-20240512113336-890f9cd91322
+	github.com/vinayaknolastname/our v0.0.0-20240512123036-759c351f7a38
 )
 
 require (
