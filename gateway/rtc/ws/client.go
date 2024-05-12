@@ -5,7 +5,6 @@ import (
 	"log"
 
 	"github.com/gorilla/websocket"
-	"github.com/vinayaknolastname/our/gateway/rtc/ws2"
 )
 
 type Client struct {
@@ -22,7 +21,7 @@ type Message struct {
 	Username string `json:"username"`
 }
 
-func (c *Client) WriteMessage() {
+func (c *Client) writeMessage() {
 	defer func() {
 		c.Conn.Close()
 	}()
@@ -37,7 +36,7 @@ func (c *Client) WriteMessage() {
 
 	}
 }
-func (c *Client) ReadMessage(h *ws2.WsManager) {
+func (c *Client) readMessage(h *WsManager) {
 	// defer func() {
 	// 	h.Unregister <- c
 	// 	c.Conn.Close()
@@ -50,12 +49,14 @@ func (c *Client) ReadMessage(h *ws2.WsManager) {
 				log.Printf("ws err", err)
 			}
 		}
+		fmt.Println("readmsg", m)
 
 		msg := &Message{
 			Content:  string(m),
 			ChatId:   c.ChatId,
 			Username: c.Username,
 		}
+		fmt.Println("readmsg", msg)
 
 		h.Message <- msg
 

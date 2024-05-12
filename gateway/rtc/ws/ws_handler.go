@@ -2,6 +2,7 @@ package ws
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -9,11 +10,11 @@ import (
 )
 
 type Handler struct {
-	hub *Hub
+	manager *WsManager
 }
 
-func NewHandler(h *Hub) *Handler {
-	return &Handler{hub: h}
+func NewHandler(h *WsManager) *Handler {
+	return &Handler{manager: h}
 }
 
 type CreateRoomReq struct {
@@ -32,7 +33,7 @@ func (h *Handler) CreateRoom(c *gin.Context) {
 		return
 	}
 
-	h.hub.Rooms[req.ID] = &Chat{
+	h.manager.Chats[req.ID] = &Chat{
 		ID:      req.ID,
 		Name:    req.Name,
 		Clients: make(map[string]*Client),
@@ -60,7 +61,8 @@ func (h *Handler) StartChat(c *gin.Context) {
 	chatId := c.Param("chatId")
 	clientID := c.Query("userID")
 	username := c.Query("username")
-
+	CheckChatIsLive(h, chatId)
+	log.Println("chats", h.manager.Chats)
 	cl := &Client{
 		Conn:     conn,
 		ChatId:   chatId,
@@ -68,19 +70,32 @@ func (h *Handler) StartChat(c *gin.Context) {
 		ID:       clientID,
 		Message:  make(chan *Message, 10),
 	}
-
+	log.Println("chats", cl)
 	m := &Message{
 		Content:  "A new user joined",
 		ChatId:   chatId,
 		Username: username,
 	}
+	log.Println("chats", m)
+	h.manager.Register <- cl
 
-	h.hub.Register <- cl
+	h.manager.Message <- m
 
-	h.hub.Broadcast <- m
+	go cl.writeMessage()
+	cl.readMessage(h.manager)
+}
 
-	// go cl.writeMessage()
-	// cl.readMessage(h.hub)
+func CheckChatIsLive(h *Handler, chatId string) {
+	if _, ok := h.manager.Chats[chatId]; ok == false {
+		h.manager.Chats[chatId] = &Chat{
+			ID:      chatId,
+			Name:    chatId,
+			Clients: make(map[string]*Client),
+		}
+		return
+	} else {
+		return
+	}
 }
 
 type RoomRes struct {
@@ -92,7 +107,7 @@ func (h *Handler) GetRooms(c *gin.Context) {
 
 	rooms := make([]RoomRes, 0)
 
-	for _, r := range h.hub.Rooms {
+	for _, r := range h.manager.Chats {
 		rooms = append(rooms, RoomRes{
 			ID:   r.ID,
 			Name: r.Name,

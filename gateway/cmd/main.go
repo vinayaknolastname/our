@@ -15,11 +15,14 @@ func main() {
 	// }
 	fmt.Println("sssss")
 
-	hub := ws.NewHub()
+	hub := ws.NewWsManager()
 	wshandler := ws.NewHandler(hub)
 
+	fmt.Println("sssss")
+
+	go hub.RunWsManager()
+
 	router.InitRouter(*wshandler)
-	go hub.Run()
 
 	// if err != nil {
 	// 	log.Println("db connection fail", err)
