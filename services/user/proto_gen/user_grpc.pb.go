@@ -25,6 +25,8 @@ type UserServiceClient interface {
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*UserResponse, error)
 	StartChat(ctx context.Context, in *StartChatRequest, opts ...grpc.CallOption) (*CommonResponse, error)
 	GetUserData(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
+	SendMessage(ctx context.Context, in *CreateMessageRequest, opts ...grpc.CallOption) (*CommonResponse, error)
+	GetMessages(ctx context.Context, in *GetMessageRequest, opts ...grpc.CallOption) (*MessageResponse, error)
 }
 
 type userServiceClient struct {
@@ -62,6 +64,24 @@ func (c *userServiceClient) GetUserData(ctx context.Context, in *GetUserRequest,
 	return out, nil
 }
 
+func (c *userServiceClient) SendMessage(ctx context.Context, in *CreateMessageRequest, opts ...grpc.CallOption) (*CommonResponse, error) {
+	out := new(CommonResponse)
+	err := c.cc.Invoke(ctx, "/UserService/SendMessage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) GetMessages(ctx context.Context, in *GetMessageRequest, opts ...grpc.CallOption) (*MessageResponse, error) {
+	out := new(MessageResponse)
+	err := c.cc.Invoke(ctx, "/UserService/GetMessages", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -69,6 +89,8 @@ type UserServiceServer interface {
 	CreateUser(context.Context, *CreateUserRequest) (*UserResponse, error)
 	StartChat(context.Context, *StartChatRequest) (*CommonResponse, error)
 	GetUserData(context.Context, *GetUserRequest) (*GetUserResponse, error)
+	SendMessage(context.Context, *CreateMessageRequest) (*CommonResponse, error)
+	GetMessages(context.Context, *GetMessageRequest) (*MessageResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -84,6 +106,12 @@ func (UnimplementedUserServiceServer) StartChat(context.Context, *StartChatReque
 }
 func (UnimplementedUserServiceServer) GetUserData(context.Context, *GetUserRequest) (*GetUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserData not implemented")
+}
+func (UnimplementedUserServiceServer) SendMessage(context.Context, *CreateMessageRequest) (*CommonResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendMessage not implemented")
+}
+func (UnimplementedUserServiceServer) GetMessages(context.Context, *GetMessageRequest) (*MessageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMessages not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -152,6 +180,42 @@ func _UserService_GetUserData_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_SendMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateMessageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).SendMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/UserService/SendMessage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).SendMessage(ctx, req.(*CreateMessageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_GetMessages_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMessageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetMessages(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/UserService/GetMessages",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetMessages(ctx, req.(*GetMessageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -170,6 +234,14 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetUserData",
 			Handler:    _UserService_GetUserData_Handler,
+		},
+		{
+			MethodName: "SendMessage",
+			Handler:    _UserService_SendMessage_Handler,
+		},
+		{
+			MethodName: "GetMessages",
+			Handler:    _UserService_GetMessages_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

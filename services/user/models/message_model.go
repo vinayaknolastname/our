@@ -12,6 +12,8 @@ type MessageModel struct {
 	ChatId       int32         `gorm:"NOT NULL;index"`
 	SenderId     int32         `gorm:"NOT NULL;index"`
 	DateTime     time.Time     `gorm:"default:CURRENT_TIMESTAMP"`
-	DeliveredToo pq.Int32Array `gorm:"type:int[];index;"`
-	ReadedBy     pq.Int32Array `gorm:"type:int[];index;"`
+	DeliveredToo pq.Int32Array `gorm:"type:int[];index"`
+	ReadedBy     pq.Int32Array `gorm:"type:int[];index"`
+	IsDeleted    bool          `gorm:"default:FALSE;index"`
+	Seq          int32         `gorm:"NOT NULL;index"`
 }

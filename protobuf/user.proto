@@ -1,19 +1,44 @@
 syntax = "proto3";
 
 option go_package = "github.com/vinayaknolastname/our/user";
-
+import "google/protobuf/timestamp.proto";
 
 service UserService{
     rpc CreateUser(CreateUserRequest) returns (UserResponse);
     rpc StartChat(StartChatRequest) returns (CommonResponse);
     rpc GetUserData(GetUserRequest) returns (GetUserResponse);
+    rpc SendMessage(CreateMessageRequest) returns (CommonResponse);
+    rpc GetMessages(GetMessageRequest) returns (MessageResponse);
 }
 
+message CreateMessageRequest{
+    string userId = 1;
+    int32 chatId = 2;
+    string content = 3;
+}
 
+message GetMessageRequest{
+    int32 userId = 1;
+    int32 chatId = 2;
+    int32 seq = 3;
+}
 
+message MessageResponse{
+    CommonResponse resData = 1;
+    repeated Message message = 2;
+}
 
-
-
+message Message{
+    int32 Id = 1;
+    string content  = 2;
+    int32 senderId = 3;
+    google.protobuf.Timestamp dateTime = 4;
+    repeated int32 deliveredTo = 5;
+    repeated int32 readedBy = 6;
+    int32 chatId = 7;
+    bool isDeleted = 8;
+    int32 seq = 9;
+}
 
 message CreateUserRequest {
     string name = 1;
