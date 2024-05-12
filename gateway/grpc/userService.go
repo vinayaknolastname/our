@@ -133,3 +133,27 @@ func StartChat(c *gin.Context) {
 
 	c.JSON(int(resp.StatusCode), resp)
 }
+
+func CreateMessage(userId int32, chatId int32, content string) {
+	utils.LogSomething("Create Message", "", 1)
+
+	// userId := c.Param("userId")
+	// intUserId, err := strconv.Atoi(userId)
+
+	client := user.NewUserServiceClient(connection.conn)
+	resp, err := client.SendMessage(context.Background(), &user.CreateMessageRequest{UserId: userId, ChatId: chatId, Content: content})
+	if err != nil {
+		log.Fatalf("Failed to call GetUserAndChats: %v", err)
+	}
+
+	log.Printf("Response from server: %s", resp)
+	// respto := CommonResponse{
+	// 	statusCode: resp.ResData.StatusCode,
+	// 	success:    resp.ResData.Success,
+	// 	message:    resp.ResData.Message,
+	// }
+
+	utils.LogSomething("Grpc res into getUserChats", resp, 1)
+
+	c.JSON(int(resp.ResData.StatusCode), resp)
+}
