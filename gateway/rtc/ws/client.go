@@ -5,23 +5,24 @@ import (
 	"log"
 
 	"github.com/gorilla/websocket"
+	"github.com/vinayaknolastname/our/gateway/rtc/ws2"
 )
 
 type Client struct {
 	Conn     *websocket.Conn
 	Message  chan *Message
 	ID       string `json:id`
-	RoomID   string `json:roomId`
+	ChatId   string `json:roomId`
 	Username string `json:"username"`
 }
 
 type Message struct {
 	Content  string `json:"content"`
-	RoomID   string `json:"roomID"`
+	ChatId   string `json:"roomID"`
 	Username string `json:"username"`
 }
 
-func (c *Client) writeMessage() {
+func (c *Client) WriteMessage() {
 	defer func() {
 		c.Conn.Close()
 	}()
@@ -36,11 +37,11 @@ func (c *Client) writeMessage() {
 
 	}
 }
-func (c *Client) readMessage(h *Hub) {
-	defer func() {
-		h.Unregister <- c
-		c.Conn.Close()
-	}()
+func (c *Client) ReadMessage(h *ws2.WsManager) {
+	// defer func() {
+	// 	h.Unregister <- c
+	// 	c.Conn.Close()
+	// }()
 
 	for {
 		_, m, err := c.Conn.ReadMessage()
@@ -52,11 +53,11 @@ func (c *Client) readMessage(h *Hub) {
 
 		msg := &Message{
 			Content:  string(m),
-			RoomID:   c.RoomID,
+			ChatId:   c.ChatId,
 			Username: c.Username,
 		}
 
-		h.Broadcast <- msg
+		h.Message <- msg
 
 	}
 }

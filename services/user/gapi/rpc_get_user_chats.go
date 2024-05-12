@@ -7,6 +7,7 @@ import (
 	"github.com/lib/pq"
 	"github.com/vinayaknolastname/our/services/user/db"
 	user "github.com/vinayaknolastname/our/services/user/proto_gen"
+
 	"github.com/vinayaknolastname/our/utils"
 )
 

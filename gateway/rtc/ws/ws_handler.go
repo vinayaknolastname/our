@@ -32,7 +32,7 @@ func (h *Handler) CreateRoom(c *gin.Context) {
 		return
 	}
 
-	h.hub.Rooms[req.ID] = &Room{
+	h.hub.Rooms[req.ID] = &Chat{
 		ID:      req.ID,
 		Name:    req.Name,
 		Clients: make(map[string]*Client),
@@ -48,7 +48,7 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-func (h *Handler) JoinRoom(c *gin.Context) {
+func (h *Handler) StartChat(c *gin.Context) {
 	fmt.Println("Helleo")
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 
@@ -57,13 +57,13 @@ func (h *Handler) JoinRoom(c *gin.Context) {
 		return
 	}
 
-	roomID := c.Param("roomId")
+	chatId := c.Param("chatId")
 	clientID := c.Query("userID")
 	username := c.Query("username")
 
 	cl := &Client{
 		Conn:     conn,
-		RoomID:   roomID,
+		ChatId:   chatId,
 		Username: username,
 		ID:       clientID,
 		Message:  make(chan *Message, 10),
@@ -71,7 +71,7 @@ func (h *Handler) JoinRoom(c *gin.Context) {
 
 	m := &Message{
 		Content:  "A new user joined",
-		RoomID:   roomID,
+		ChatId:   chatId,
 		Username: username,
 	}
 
@@ -79,8 +79,8 @@ func (h *Handler) JoinRoom(c *gin.Context) {
 
 	h.hub.Broadcast <- m
 
-	go cl.writeMessage()
-	cl.readMessage(h.hub)
+	// go cl.writeMessage()
+	// cl.readMessage(h.hub)
 }
 
 type RoomRes struct {

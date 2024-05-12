@@ -1,57 +1,61 @@
 package ws
 
-type Room struct {
-	ID      string             `json"id"`
-	Name    string             `json"name"`
-	Clients map[string]*Client `json"client"`
+type WsManager struct {
+	Chats      map[string]*ws.Chat
+	Register   chan *ws.Client
+	Unregister chan *ws.Client
+	Message    chan *ws.Message
 }
 
-type Hub struct {
-	Rooms      map[string]*Room
-	Register   chan *Client
-	Unregister chan *Client
-	Broadcast  chan *Message
-}
+// var StoreWsManager *WsManager
 
-func NewHub() *Hub {
-	return &Hub{
-		Rooms:      make(map[string]*Room),
-		Register:   make(chan *Client),
-		Unregister: make(chan *Client),
-		Broadcast:  make(chan *Message, 5),
+func NewWsManager() *WsManager {
+	return &WsManager{
+		Chats:      make(map[string]*ws.Chat),
+		Register:   make(chan *ws.Client),
+		Unregister: make(chan *ws.Client),
+		Message:    make(chan *ws.Message),
 	}
 }
 
-func (h *Hub) Run() {
+func (w *WsManager) RunWsManager() {
+
 	for {
 		select {
-		case cl := <-h.Register:
-			if _, ok := h.Rooms[cl.RoomID]; ok {
-				r := h.Rooms[cl.RoomID]
-				if _, ok := r.Clients[cl.ID]; !ok {
-					r.Clients[cl.ID] = cl
+		case cl := <-w.Register:
+			if _, ok := w.Chats[cl.ChatId]; ok == false {
+
+				if _, ok := w.Chats[cl.ChatId].Clients[cl.ID]; ok == false {
+					w.Chats[cl.ChatId].Clients[cl.ID] = cl
+
 				}
+				// if _, ok := r.Clients[cl.ID]; !ok {
+				// 	r.Clients[cl.ID] = cl
+				// }
 			}
-		case cl := <-h.Unregister:
-			if _, ok := h.Rooms[cl.RoomID]; ok {
-				if _, ok := h.Rooms[cl.RoomID].Clients[cl.ID]; ok {
+		// case cl := <-w.Unregister:
+		// 	if _, ok := w.Clients[cl.ID]; ok == true {
+		// 		delete(w.Clients, cl.ID)
+		// 	}
 
-					if len(h.Rooms[cl.RoomID].Clients) != 0 {
+		//  .Clients[cl.ID]; ok {
 
-						h.Broadcast <- &Message{
-							Content:  "User LEft",
-							RoomID:   cl.RoomID,
-							Username: cl.Username,
-						}
-					}
-					delete(h.Rooms[cl.RoomID].Clients, cl.ID)
-					close(cl.Message)
-				}
-			}
+		// 	if len(h.Rooms[cl.RoomID].Clients) != 0 {
 
-		case m := <-h.Broadcast:
-			if _, ok := h.Rooms[m.RoomID]; ok {
-				for _, cl := range h.Rooms[m.RoomID].Clients {
+		// 		h.Broadcast <- &Message{
+		// 			Content:  "User LEft",
+		// 			RoomID:   cl.RoomID,
+		// 			Username: cl.Username,
+		// 		}
+		// 	}
+		// 	delete(h.Rooms[cl.RoomID].Clients, cl.ID)
+		// 	close(cl.Message)
+
+		case m := <-w.Message:
+			if _, ok := w.Chats[m.ChatId]; ok {
+
+				for _, cl := range w.Chats[m.ChatId].Clients {
+
 					cl.Message <- m
 				}
 			}
