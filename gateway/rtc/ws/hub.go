@@ -29,7 +29,7 @@ func NewWsManager() *WsManager {
 
 func (w *WsManager) RunWsManager() {
 	log.Println("w.Register")
-
+	go broad(w)
 	for {
 
 		select {
@@ -66,28 +66,38 @@ func (w *WsManager) RunWsManager() {
 					}
 					utils.LogSomething("unbre", m, 1)
 
-					// w.Message <- m
+					w.Message <- m
 				}
 			}
 
-		case m := <-w.Message:
-			utils.LogSomething("msgHub", w.Chats[m.ChatId].Clients, 1)
-			if _, ok := w.Chats[m.ChatId]; ok {
-				membersOfChat := w.Chats[m.ChatId].Members
-				checkOtherUserIsConnectedOrNot(membersOfChat, m.ChatId, w.Chats[m.ChatId].Clients, m.Content, m.SenderId)
-				for _, cl := range w.Chats[m.ChatId].Clients {
+			// case m := <-w.Message:
+			// 	utils.LogSomething("msgHub", w.Chats[m.ChatId].Clients, 1)
+			// 	if _, ok := w.Chats[m.ChatId]; ok {
+			// 		membersOfChat := w.Chats[m.ChatId].Members
+			// 		checkOtherUserIsConnectedOrNot(membersOfChat, m.ChatId, w.Chats[m.ChatId].Clients, m.Content, m.SenderId)
+			// 		for _, cl := range w.Chats[m.ChatId].Clients {
 
-					cl.Message <- m
-				}
-			}
+			// 			cl.Message <- m
+			// 		}
+			// 	}
 
 		}
 	}
+
 }
 
-func broad() {
+func broad(w *WsManager) {
 	for {
+		m := <-w.Message
+		utils.LogSomething("msgHub", w.Chats[m.ChatId].Clients, 1)
+		if _, ok := w.Chats[m.ChatId]; ok {
+			membersOfChat := w.Chats[m.ChatId].Members
+			checkOtherUserIsConnectedOrNot(membersOfChat, m.ChatId, w.Chats[m.ChatId].Clients, m.Content, m.SenderId)
+			for _, cl := range w.Chats[m.ChatId].Clients {
 
+				cl.Message <- m
+			}
+		}
 	}
 }
 
