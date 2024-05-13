@@ -34,7 +34,7 @@ func (server *gAPI) CreateUser(ctx context.Context, req *user.CreateUserRequest)
 
 var mutex sync.Mutex
 
-func (server *gAPI) AddChatInUsersModel(userId, chatId int) {
+func (server *gAPI) AddChatInUsersModel(userId, chatId int32) {
 	// mutex.Lock()
 	// query := db.AddChatInUser()
 	// var chats []uint8

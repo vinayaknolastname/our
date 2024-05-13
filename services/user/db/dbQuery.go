@@ -37,7 +37,10 @@ func AddChatInUser() string {
 func AddChatInUserProper() string {
 
 	return `UPDATE users_models
-	SET chats = ARRAY_APPEND(chats, $2)
+	SET chats = CASE
+	          WHEN $2 = ANY(chats) THEN chats
+			  ELSE ARRAY_APPEND(chats, $2)
+			END  
 	WHERE id = $1`
 }
 
