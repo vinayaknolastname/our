@@ -4,6 +4,8 @@ import (
 	"log"
 
 	// grpcHandlers "github.com/vinayaknolastname/our/gateway/grpc"
+	// grpcHandlers "github.com/vinayaknolastname/our/gateway/grpc"
+	grpcHandlers "github.com/vinayaknolastname/our/gateway/grpc"
 	"github.com/vinayaknolastname/our/gateway/utils"
 )
 
@@ -87,6 +89,8 @@ func checkOtherUserIsConnectedOrNot(membersOfChat []int32, chatId int32, clients
 
 			tempDeliveredList = append(tempDeliveredList, membersOfChat[i])
 		}
+
+		grpcHandlers.CreateMessage(userId, chatId, content, tempDeliveredList)
 	}
 }
 

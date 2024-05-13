@@ -8,8 +8,8 @@ func CreateUserQuery() string {
 
 func CreateMessageQuery() string {
 
-	return `INSERT INTO message_models( name , 	content , chat_id , sender_id , date_time , delivered_too , readed_by , is_deleted , seq )
-	VALUES( $1 , $2 ,  $3) RETURNING id`
+	return `INSERT INTO message_models(  content , chat_id , sender_id , date_time , delivered_too , readed_by , is_deleted , seq )
+	VALUES( $1 , $2 ,  $3 , $4 , $5 , $6 , $7 , $8) RETURNING id`
 }
 
 func GetUserQuery() string {

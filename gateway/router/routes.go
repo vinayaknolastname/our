@@ -60,7 +60,7 @@ func InitRouter(wshandler ws.Handler) {
 	{
 		ws := router.Group("/ws")
 		ws.POST("createRoom", wshandler.CreateRoom)
-		ws.GET("startChat/:chatId", wshandler.StartChat)
+		ws.GET("startChat/:index", wshandler.StartChat)
 		ws.GET("getRooms", wshandler.GetRooms)
 
 	}

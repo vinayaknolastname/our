@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/vinayaknolastname/our/gateway/types"
 	"github.com/vinayaknolastname/our/gateway/utils"
 	user "github.com/vinayaknolastname/our/services/user/proto_gen"
 	"google.golang.org/grpc"
@@ -19,7 +20,7 @@ var opts []grpc.DialOption
 var (
 	tls                = flag.Bool("tls", false, "Connection uses TLS if true, else plain TCP")
 	caFile             = flag.String("ca_file", "", "The file containing the CA root cert file")
-	serverAddr         = flag.String("addr", "localhost:61619", "The server address in the format of host:port")
+	serverAddr         = flag.String("addr", "localhost:64693", "The server address in the format of host:port")
 	serverHostOverride = flag.String("server_host_override", "x.test.example.com", "The server name used to verify the hostname returned by the TLS handshake")
 )
 
@@ -96,6 +97,30 @@ func GetUserAndChats(c *gin.Context) {
 
 	utils.LogSomething("Grpc res into getUserChats", resp, 1)
 
+	var tempChats []types.Chat
+
+	for i := 0; i < len(resp.UserData.Chat); i++ {
+
+		chatData := types.Chat{
+			ID:      resp.UserData.Chat[i].Id,
+			Name:    resp.UserData.Chat[i].Name,
+			Members: resp.UserData.Chat[i].Members,
+		}
+		err := append(tempChats, chatData)
+		if err != nil {
+
+		}
+	}
+
+	data := &types.UserAndChatData{
+		UserId:       resp.UserData.Id,
+		Phone_number: resp.UserData.PhoneNumber,
+		Name:         resp.UserData.Name,
+		Chats:        tempChats,
+	}
+
+	utils.LogSomething("Local saved user and chat", data, 1)
+
 	c.JSON(int(resp.ResData.StatusCode), resp)
 }
 
@@ -134,7 +159,7 @@ func StartChat(c *gin.Context) {
 	c.JSON(int(resp.StatusCode), resp)
 }
 
-func CreateMessage(userId int32, chatId int32, content string, isDelivered []int) {
+func CreateMessage(userId int32, chatId int32, content string, isDelivered []int32) {
 	utils.LogSomething("Create Message", "", 1)
 
 	// userId := c.Param("userId")
