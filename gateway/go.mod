@@ -3,9 +3,10 @@ module github.com/vinayaknolastname/our/gateway
 go 1.22.2
 
 require (
+	github.com/golang/protobuf v1.5.4
 	github.com/lib/pq v1.10.9
 	github.com/sirupsen/logrus v1.9.3
-	github.com/vinayaknolastname/our v0.0.0-20240512181426-8c2625de17af
+	github.com/vinayaknolastname/our v0.0.0-20240513050056-d7194ee9a84d
 )
 
 require (
@@ -13,7 +14,6 @@ require (
 	github.com/cloudwego/base64x v0.1.4 // indirect
 	github.com/cloudwego/iasm v0.2.0 // indirect
 	github.com/go-playground/validator/v10 v10.20.0 // indirect
-	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/kr/text v0.2.0 // indirect
 )
 
