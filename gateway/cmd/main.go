@@ -20,7 +20,7 @@ func main() {
 
 	fmt.Println("sssss")
 
-	go hub.RunWsManager()
+	hub.RunWsManager()
 
 	router.InitRouter(*wshandler)
 

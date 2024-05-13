@@ -36,7 +36,10 @@ func (c *Client) writeMessage() {
 
 	for {
 		message, ok := <-c.Message
+		fmt.Println("msg write", ok)
+
 		if !ok {
+
 			return
 		}
 		fmt.Println("msg", message)
@@ -45,10 +48,11 @@ func (c *Client) writeMessage() {
 	}
 }
 func (c *Client) readMessage(h *WsManager) {
-	// defer func() {
-	// 	h.Unregister <- c
-	// 	c.Conn.Close()
-	// }()
+	defer func() {
+		h.Unregister <- c
+		c.Conn.Close()
+
+	}()
 
 	for {
 		_, m, err := c.Conn.ReadMessage()
@@ -56,6 +60,8 @@ func (c *Client) readMessage(h *WsManager) {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.Printf("ws err", err)
 			}
+			return
+
 		}
 		fmt.Println("readmsg", m)
 

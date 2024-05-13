@@ -27,10 +27,10 @@ func (server *gAPI) StartChat(ctx context.Context, req *user.StartChatRequest) (
 	listOfStringedMembers := req.GetMembers()
 	// var wg sync.WaitGroup
 
-	responseFail := &user.CommonResponse{StatusCode: http.StatusOK,
-		Success: false,
-		Message: "chat not created",
-	}
+	// responseFail := &user.CommonResponse{StatusCode: http.StatusOK,
+	// 	Success: false,
+	// 	Message: "chat not created",
+	// }
 
 	for i := 0; i < len(listOfStringedMembers); i++ {
 		// wg.Add(1)
@@ -40,11 +40,11 @@ func (server *gAPI) StartChat(ctx context.Context, req *user.StartChatRequest) (
 
 		// userIdInt, err := strconv.Atoi(userId)
 
-		if err != nil {
-			utils.LogSomething("Mebers", userId, 1)
-			return responseFail, nil
+		// if err != nil {
+		// 	utils.LogSomething("Mebers", userId, 1)
+		// 	return responseFail, nil
 
-		}
+		// }
 		server.AddChatInUsersModel(int32(userId), int32(id))
 	}
 

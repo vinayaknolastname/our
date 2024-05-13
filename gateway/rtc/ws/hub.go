@@ -49,26 +49,29 @@ func (w *WsManager) RunWsManager() {
 				// 	r.Clients[cl.ID] = cl
 				// }
 			}
-		// case cl := <-w.Unregister:
-		// 	if _, ok := w.Clients[cl.ID]; ok == true {
-		// 		delete(w.Clients, cl.ID)
-		// 	}
+		case cl := <-w.Unregister:
+			if _, ok := w.Chats[cl.ChatId]; ok {
+				if _, ok := w.Chats[cl.ChatId].Clients[cl.ID]; ok {
 
-		//  .Clients[cl.ID]; ok {
+					// if len(w.Chats[cl.ChatId].Clients) != 0 {
 
-		// 	if len(h.Rooms[cl.RoomID].Clients) != 0 {
+					// }
+					delete(w.Chats[cl.ChatId].Clients, cl.ID)
+					close(cl.Message)
+					m := &Message{
+						Content:  "A guy left",
+						ChatId:   int32(cl.ChatId),
+						Username: "username",
+						SenderId: int32(cl.ID),
+					}
+					utils.LogSomething("unbre", m, 1)
 
-		// 		h.Broadcast <- &Message{
-		// 			Content:  "User LEft",
-		// 			RoomID:   cl.RoomID,
-		// 			Username: cl.Username,
-		// 		}
-		// 	}
-		// 	delete(h.Rooms[cl.RoomID].Clients, cl.ID)
-		// 	close(cl.Message)
+					// w.Message <- m
+				}
+			}
 
 		case m := <-w.Message:
-			utils.LogSomething("msg", w.Chats[m.ChatId].Clients, 1)
+			utils.LogSomething("msgHub", w.Chats[m.ChatId].Clients, 1)
 			if _, ok := w.Chats[m.ChatId]; ok {
 				membersOfChat := w.Chats[m.ChatId].Members
 				checkOtherUserIsConnectedOrNot(membersOfChat, m.ChatId, w.Chats[m.ChatId].Clients, m.Content, m.SenderId)
@@ -79,6 +82,12 @@ func (w *WsManager) RunWsManager() {
 			}
 
 		}
+	}
+}
+
+func broad() {
+	for {
+
 	}
 }
 
