@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	grpcHandlers "github.com/vinayaknolastname/our/gateway/grpc"
 )
 
 type Handler struct {
@@ -63,10 +64,18 @@ func (h *Handler) StartChat(c *gin.Context) {
 	intCHatID, err := strconv.Atoi(chatId)
 	clientID := c.Query("userID")
 	intClientID, err := strconv.Atoi(clientID)
-
 	username := c.Query("username")
 	CheckChatIsLive(h, int32(intCHatID))
 	log.Println("chats", h.manager.Chats)
+
+	data := grpcHandlers.GetUserAndChatsFunction(grpcHandlers.UserGrpcService{}, int32(intClientID))
+
+	for i := 0; i < len(data.Chats); i++ {
+		if data.Chats[i].ID == int32(intCHatID) {
+			h.manager.Chats[int32(intCHatID)].Members = data.Chats[i].Members
+		}
+	}
+
 	cl := &Client{
 		Conn:     conn,
 		ChatId:   int32(intCHatID),
@@ -79,6 +88,7 @@ func (h *Handler) StartChat(c *gin.Context) {
 		Content:  "A new user joined",
 		ChatId:   int32(intCHatID),
 		Username: username,
+		SenderId: int32(intClientID),
 	}
 	log.Println("chats", m)
 	h.manager.Register <- cl

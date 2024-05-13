@@ -39,8 +39,9 @@ func (server *gAPI) StartChat(ctx context.Context, req *user.StartChatRequest) (
 			utils.LogSomething("Mebers", userId, 1)
 
 		}
-		server.AddChatInUsersModel(userIdInt, id)
 	}
+	server.AddChatInUsersModel(listOfStringedMembers[0], id)
+
 	// wg.Wait()
 
 	// if result.Err() != nil {

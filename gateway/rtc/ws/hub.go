@@ -68,7 +68,7 @@ func (w *WsManager) RunWsManager() {
 		// 	close(cl.Message)
 
 		case m := <-w.Message:
-			utils.LogSomething("msg", w.Chats[2].Clients, 1)
+			utils.LogSomething("msg", w.Chats[m.ChatId].Clients, 1)
 			if _, ok := w.Chats[m.ChatId]; ok {
 				membersOfChat := w.Chats[m.ChatId].Members
 				checkOtherUserIsConnectedOrNot(membersOfChat, m.ChatId, w.Chats[m.ChatId].Clients, m.Content, m.SenderId)
@@ -90,8 +90,9 @@ func checkOtherUserIsConnectedOrNot(membersOfChat []int32, chatId int32, clients
 			tempDeliveredList = append(tempDeliveredList, membersOfChat[i])
 		}
 
-		grpcHandlers.CreateMessage(userId, chatId, content, tempDeliveredList)
 	}
+	grpcHandlers.CreateMessage(userId, chatId, content, tempDeliveredList)
+
 }
 
 type Chat struct {

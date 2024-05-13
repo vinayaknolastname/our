@@ -86,6 +86,6 @@ message CommonResponse{
 message StartChatRequest {
     string name = 1;
     int32 type = 2;
-    repeated string members = 3;
+    repeated int32 members = 3;
 }
 

@@ -8,7 +8,7 @@ import (
 
 type MessageModel struct {
 	ID           int32         `gorm:"PRIMARY_KEY;auto_increment;unique"`
-	Content      string        `gorm:"PRIMARY_KEY;auto_increment;unique"`
+	Content      string        `gorm:""`
 	ChatId       int32         `gorm:"NOT NULL;index"`
 	SenderId     int32         `gorm:"NOT NULL;index"`
 	DateTime     time.Time     `gorm:"default:CURRENT_TIMESTAMP"`

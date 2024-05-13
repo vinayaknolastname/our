@@ -50,9 +50,9 @@ func InitRouter(wshandler ws.Handler) {
 		user.GET("/", func(ctx *gin.Context) {
 			ctx.JSON(http.StatusOK, gin.H{"message": "hello"})
 		})
-		user.POST("/createUser", grpcHandlers.ConnectUserServiceGrpc, grpcHandlers.CreateUser)
-		user.GET("/getUserAndChats/:userId", grpcHandlers.ConnectUserServiceGrpc, grpcHandlers.GetUserAndChats)
-		user.POST("/startChat", grpcHandlers.ConnectUserServiceGrpc, grpcHandlers.StartChat)
+		user.POST("/createUser", grpcHandlers.ConnectUserServiceGrpcMiddleWare, grpcHandlers.CreateUser)
+		user.GET("/getUserAndChats/:userId", grpcHandlers.ConnectUserServiceGrpcMiddleWare, grpcHandlers.GetUserAndChats)
+		user.POST("/startChat", grpcHandlers.ConnectUserServiceGrpcMiddleWare, grpcHandlers.StartChat)
 		// user.GET("/getUserChats/:chatId", grpcHandlers.ConnectUserServiceGrpc, grpcHandlers.CreateUser)
 		// user.GET("/join/:chatId", grpcHandlers.ConnectUserServiceGrpc, grpcHandlers.CreateUser)
 
@@ -60,7 +60,7 @@ func InitRouter(wshandler ws.Handler) {
 	{
 		ws := router.Group("/ws")
 		ws.POST("createRoom", wshandler.CreateRoom)
-		ws.GET("startChat/:index", wshandler.StartChat)
+		ws.GET("startChat/:chatId", wshandler.StartChat)
 		ws.GET("getRooms", wshandler.GetRooms)
 
 	}

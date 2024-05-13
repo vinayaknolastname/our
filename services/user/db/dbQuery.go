@@ -8,8 +8,15 @@ func CreateUserQuery() string {
 
 func CreateMessageQuery() string {
 
-	return `INSERT INTO message_models(  content , chat_id , sender_id , date_time , delivered_too , readed_by , is_deleted , seq )
-	VALUES( $1 , $2 ,  $3 , $4 , $5 , $6 , $7 , $8) RETURNING id`
+	return `INSERT INTO message_models(  content , chat_id , sender_id , date_time , is_deleted , seq )
+	VALUES( $1 , $2 ,  $3 , $4 , $5 , $6) RETURNING id`
+}
+
+func AddDeliveredToInMessageProper() string {
+
+	return `UPDATE message_models
+	SET delivered_too = ARRAY_APPEND(delivered_too, $2)
+	WHERE id = $1`
 }
 
 func GetUserQuery() string {
