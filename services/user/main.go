@@ -21,12 +21,6 @@ func main() {
 		log.Println("cofig load error  %err ", err)
 	}
 
-	// portStr := fmt.Sprintf("%d", config.DBConfig.DBPort)
-
-	// postgresqlDbInfo := fmt.Sprintf("host=%s port=%d user=%s "+
-	// 	"password=%s dbname=%s sslmode=disable",
-	// 	config.DBConfig.DBHost, config.DBConfig.DBPort, config.DBConfig.DBUSER, config.DBConfig.DBPASSWORD, config.DBConfig.DBNAME)
-
 	storage, err := db.NewDB()
 
 	if err != nil {
