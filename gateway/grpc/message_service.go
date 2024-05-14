@@ -17,7 +17,7 @@ func CreateReaction(service UserGrpcService, reactionData types.ReactionOnMessag
 	}
 
 	client := user.NewUserServiceClient(connection.conn)
-	resp, err := client.CreateUser(context.Background(), &user. {Name: name, PhoneNumber: int32(intPhone)})
+	resp, err := client.GetMessages(context.Background(), &user.GetMessageRequest{})
 	if err != nil {
 		log.Fatalf("User Created: %v", err)
 	}
@@ -31,5 +31,5 @@ func CreateReaction(service UserGrpcService, reactionData types.ReactionOnMessag
 
 	utils.LogSomething("User Created  User", resp, 1)
 
-	c.JSON(int(resp.ResData.StatusCode), resp.ResData)
+	// c.JSON(int(resp.ResData.StatusCode), resp.ResData)
 }
