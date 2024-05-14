@@ -6,6 +6,8 @@ func CreateUserQuery() string {
 	VALUES( $1 , $2 )`
 }
 
+/////message model
+
 func CreateMessageQuery() string {
 
 	return `INSERT INTO message_models(  content , chat_id , sender_id , date_time , is_deleted , seq )
@@ -17,6 +19,14 @@ func AddDeliveredToInMessageProper() string {
 	return `UPDATE message_models
 	SET delivered_too = ARRAY_APPEND(delivered_too, $2)
 	WHERE id = $1`
+}
+
+func GetReactionQuery() string {
+	return `SELECT * FROM reaction_on_chat_models WHERE msg_id=$1`
+}
+
+func GetMessageQuery() string {
+	return `SELECT * FROM message_models WHERE chat_id=$1 AND seq=$2`
 }
 
 func GetUserQuery() string {
@@ -32,6 +42,13 @@ func GetChatRowQuery() string {
 func AddChatInUser() string {
 
 	return `SELECT chats FROM users_models WHERE id=$1`
+}
+
+func UpdateSeqInChat() string {
+
+	return `UPDATE chats_models
+	 SET last_seq = $1
+	 WHERE id = $2`
 }
 
 func AddChatInUserProper() string {

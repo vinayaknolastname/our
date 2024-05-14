@@ -4,6 +4,7 @@ import (
 	context "context"
 	"log"
 
+	// "github.com/gin-gonic/gin"
 	"github.com/vinayaknolastname/our/gateway/types"
 	"github.com/vinayaknolastname/our/gateway/utils"
 	user "github.com/vinayaknolastname/our/services/user/proto_gen"
@@ -24,6 +25,26 @@ func CreateReaction(service UserGrpcService, reactionData types.ReactionOnMessag
 
 	// log.Printf("Create Reaction Success: %s", resp)
 
-	utils.LogSomething("Create Reaction Seuccess", resp, 1)
+	utils.LogSomething("Create Reaction Success", resp, 1)
+
+}
+
+func GetMessages(userGrpcService UserGrpcService, userId int32, seq int32, chatId int32) interface{} {
+	if userGrpcService.conn == nil {
+		ConnectUserServiceGrpc()
+	}
+
+	client := user.NewUserServiceClient(connection.conn)
+	resp, err := client.GetMessages(context.Background(), &user.GetMessageRequest{UserId: userId, ChatId: chatId, Seq: seq})
+	if err != nil {
+		log.Fatalf("Failed to call Get Messages: %v", err)
+	}
+
+	// log.Fatalf("Failed to call Get Messages: %v", resp)
+	if len(resp.Message) > 0 {
+		return resp.Message
+	}
+
+	return nil
 
 }

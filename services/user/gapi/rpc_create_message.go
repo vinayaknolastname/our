@@ -12,10 +12,15 @@ import (
 
 func (server *gAPI) SendMessage(ctx context.Context, req *user.CreateMessageRequest) (*user.CommonResponse, error) {
 
+	chat := GetUserChats(server, req.GetChatId())
+
+	newSeq := chat.seq + 1
+
 	query := db.CreateMessageQuery()
+
 	var id int32
 
-	result := server.Db.Db.QueryRow(query, req.GetContent(), req.GetChatId(), req.GetUserId(), time.Now(), false, 0)
+	result := server.Db.Db.QueryRow(query, req.GetContent(), req.GetChatId(), req.GetUserId(), time.Now(), false, int32(newSeq))
 
 	responseBad := &user.CommonResponse{
 		StatusCode: http.StatusBadRequest,
@@ -44,6 +49,12 @@ func (server *gAPI) SendMessage(ctx context.Context, req *user.CreateMessageRequ
 
 	utils.LogSomething("user response", response, 1)
 
+	queryUpdateSeq := db.UpdateSeqInChat()
+	_, err := server.Db.Db.Exec(queryUpdateSeq, newSeq, req.GetChatId())
+	if err != nil {
+		utils.LogSomething("errro in update seq", err, 0)
+		return nil, err
+	}
 	// status.Errorf(codes.Unimplemented, "method CreateUser not implemented %r", err)
 	return response, nil
 }

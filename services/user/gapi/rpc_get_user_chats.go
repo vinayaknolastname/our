@@ -73,6 +73,7 @@ type ChatModel struct {
 	name     string
 	chatType int32
 	members  pq.Int32Array
+	seq      int32
 }
 
 func GetUserChats(server *gAPI, chatId int32) ChatModel {
@@ -85,7 +86,7 @@ func GetUserChats(server *gAPI, chatId int32) ChatModel {
 		utils.LogSomething("err in get user chats db:", result.Err(), 0)
 	}
 
-	errSCan := result.Scan(&chatModel.id, &chatModel.name, &chatModel.chatType, &chatModel.members)
+	errSCan := result.Scan(&chatModel.id, &chatModel.name, &chatModel.chatType, &chatModel.members, &chatModel.seq)
 
 	if errSCan != nil {
 		utils.LogSomething("err in get user chats db:", errSCan, 0)

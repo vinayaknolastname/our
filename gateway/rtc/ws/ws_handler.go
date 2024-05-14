@@ -70,6 +70,10 @@ func (h *Handler) StartChat(c *gin.Context) {
 
 	data := grpcHandlers.GetUserAndChatsFunction(grpcHandlers.UserGrpcService{}, int32(intClientID))
 
+	messages := grpcHandlers.GetMessages(grpcHandlers.UserGrpcService{}, int32(intClientID), 0, int32(intCHatID))
+
+	log.Println("messages", messages)
+
 	for i := 0; i < len(data.Chats); i++ {
 		if data.Chats[i].ID == int32(intCHatID) {
 			h.manager.Chats[int32(intCHatID)].Members = data.Chats[i].Members
@@ -130,35 +134,5 @@ func (h *Handler) GetRooms(c *gin.Context) {
 
 	c.JSON(http.StatusOK, rooms)
 	fmt.Println("Helleo")
-	// conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 
-	// if err != nil {
-	// 	c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-	// 	return
-	// }
-	// c.JSON(http.StatusOK, h.hub.Rooms)
-	// roomID := c.Param("roomId")
-	// clientID := c.Query("userID")
-	// username := c.Query("username")
-
-	// cl := &Client{
-	// 	Conn:     conn,
-	// 	RoomID:   roomID,
-	// 	Username: username,
-	// 	ID:       clientID,
-	// 	Message:  make(chan *Message, 10),
-	// }
-
-	// m := &Message{
-	// 	Content:  "A new user joined",
-	// 	RoomID:   roomID,
-	// 	Username: username,
-	// }
-
-	// h.hub.Register <- cl
-
-	// h.hub.Broadcast <- m
-
-	// go cl.writeMessage()
-	// cl.readMessage(h.hub)
 }

@@ -16,6 +16,12 @@ type Client struct {
 	Username string `json:"username"`
 }
 
+type Reaction struct {
+	Id        int32  `json:"id"`
+	ChatId    int32  `json:"chatId"`
+	MessageId int32  `json:"messageId"`
+	Reaction  string `json:"Reaction"`
+}
 type Message struct {
 	Id          int32                `json:"id"`
 	Content     string               `json:"content"`
