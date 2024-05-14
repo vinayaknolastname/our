@@ -27,6 +27,7 @@ type UserServiceClient interface {
 	GetUserData(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
 	SendMessage(ctx context.Context, in *CreateMessageRequest, opts ...grpc.CallOption) (*CommonResponse, error)
 	GetMessages(ctx context.Context, in *GetMessageRequest, opts ...grpc.CallOption) (*MessageResponse, error)
+	ReactMessage(ctx context.Context, in *SaveMessageReactionReq, opts ...grpc.CallOption) (*CommonResponse, error)
 }
 
 type userServiceClient struct {
@@ -82,6 +83,15 @@ func (c *userServiceClient) GetMessages(ctx context.Context, in *GetMessageReque
 	return out, nil
 }
 
+func (c *userServiceClient) ReactMessage(ctx context.Context, in *SaveMessageReactionReq, opts ...grpc.CallOption) (*CommonResponse, error) {
+	out := new(CommonResponse)
+	err := c.cc.Invoke(ctx, "/UserService/ReactMessage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -91,6 +101,7 @@ type UserServiceServer interface {
 	GetUserData(context.Context, *GetUserRequest) (*GetUserResponse, error)
 	SendMessage(context.Context, *CreateMessageRequest) (*CommonResponse, error)
 	GetMessages(context.Context, *GetMessageRequest) (*MessageResponse, error)
+	ReactMessage(context.Context, *SaveMessageReactionReq) (*CommonResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -112,6 +123,9 @@ func (UnimplementedUserServiceServer) SendMessage(context.Context, *CreateMessag
 }
 func (UnimplementedUserServiceServer) GetMessages(context.Context, *GetMessageRequest) (*MessageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMessages not implemented")
+}
+func (UnimplementedUserServiceServer) ReactMessage(context.Context, *SaveMessageReactionReq) (*CommonResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReactMessage not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -216,6 +230,24 @@ func _UserService_GetMessages_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_ReactMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SaveMessageReactionReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).ReactMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/UserService/ReactMessage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).ReactMessage(ctx, req.(*SaveMessageReactionReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -242,6 +274,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetMessages",
 			Handler:    _UserService_GetMessages_Handler,
+		},
+		{
+			MethodName: "ReactMessage",
+			Handler:    _UserService_ReactMessage_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

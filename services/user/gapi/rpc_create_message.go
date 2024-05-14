@@ -15,13 +15,6 @@ func (server *gAPI) SendMessage(ctx context.Context, req *user.CreateMessageRequ
 	query := db.CreateMessageQuery()
 	var id int32
 
-	// var membersString string
-	// members := req.GetIsDelivered()
-	// for _, member := range members {
-	// 	membersString += strconv.Itoa(int(member)) + ","
-	// }
-	// // Remove the trailing comma
-	// membersString = strings.TrimSuffix(membersString, ",")
 	result := server.Db.Db.QueryRow(query, req.GetContent(), req.GetChatId(), req.GetUserId(), time.Now(), false, 0)
 
 	responseBad := &user.CommonResponse{

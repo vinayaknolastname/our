@@ -9,6 +9,7 @@ service UserService{
     rpc GetUserData(GetUserRequest) returns (GetUserResponse);
     rpc SendMessage(CreateMessageRequest) returns (CommonResponse);
     rpc GetMessages(GetMessageRequest) returns (MessageResponse);
+    rpc ReactMessage(SaveMessageReactionReq) returns (CommonResponse);
 }
 
 message CreateMessageRequest{
@@ -39,7 +40,27 @@ message Message{
     int32 chatId = 7;
     bool isDeleted = 8;
     int32 seq = 9;
+    string mediaLink = 10;
+    repeated MessageReaction msgReactions = 11;
 }
+
+
+message SaveMessageReactionReq{
+    int32 msgId = 1;
+    string reaction = 2;
+    string reactorId  = 3;
+    int32 chatId =  4;
+}
+
+message GetMessageReactionsReq{
+    int32 msgId = 1;
+}
+
+message MessageReaction{
+    string reaction = 3;
+    string reactorId  = 4;
+}
+
 
 message CreateUserRequest {
     string name = 1;

@@ -35,18 +35,7 @@ func ConnectUserServiceGrpcMiddleWare(c *gin.Context) {
 	utils.LogSomething("Calling ConnectUserServiceGrpc", connection.conn, 1)
 
 	ConnectUserServiceGrpc()
-	// if connection.conn == nil {
-	// 	utils.LogSomething("Connection is nil Connecting user service", connection.conn, 1)
 
-	// 	conn, err := grpc.Dial(*serverAddr, grpc.WithInsecure())
-	// 	if err != nil {
-	// 		utils.LogSomething("Connecting Grpc User Dial Err", err, 0)
-	// 	}
-	// 	connection = UserGrpcService{conn: conn}
-
-	// }
-
-	// utils.LogSomething("Connecting Grpc User Dial Err", "connection.conn", 0)
 	c.Next()
 }
 
@@ -263,13 +252,7 @@ func GetMessages(userId int32, chatId int32, sequence int32) {
 	}
 
 	log.Printf("Get Messages Success: %s", resp)
-	// respto := CommonResponse{
-	// 	statusCode: resp.ResData.StatusCode,
-	// 	success:    resp.ResData.Success,
-	// 	message:    resp.ResData.Message,
-	// }
 
 	utils.LogSomething("CreateMessage Success", resp, 1)
 
-	// c.JSON(int(resp.StatusCode), resp)
 }

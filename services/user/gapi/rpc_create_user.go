@@ -3,7 +3,6 @@ package gApi
 import (
 	"context"
 	"net/http"
-	"sync"
 
 	"github.com/vinayaknolastname/our/services/user/db"
 	user "github.com/vinayaknolastname/our/services/user/proto_gen"
@@ -31,8 +30,6 @@ func (server *gAPI) CreateUser(ctx context.Context, req *user.CreateUserRequest)
 	// status.Errorf(codes.Unimplemented, "method CreateUser not implemented %r", err)
 	return response, nil
 }
-
-var mutex sync.Mutex
 
 func (server *gAPI) AddChatInUsersModel(userId, chatId int32) {
 	// mutex.Lock()

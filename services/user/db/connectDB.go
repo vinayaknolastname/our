@@ -52,7 +52,7 @@ func gormAutoMigrate(d *sql.DB, dbstring string) {
 		log.Printf("gorm error", err)
 	}
 
-	err = gormDB.AutoMigrate(&models.UsersModel{}, &models.ChatsModel{}, &models.MessageModel{})
+	err = gormDB.AutoMigrate(&models.UsersModel{}, &models.ChatsModel{}, &models.MessageModel{}, &models.ReactionOnChatModel{})
 
 	if err != nil {
 

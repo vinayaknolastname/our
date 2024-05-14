@@ -49,3 +49,10 @@ func CreateChatQuery() string {
 	return `INSERT INTO chats_models( name , type , members )
 	VALUES( $1 , $2 ,  $3) RETURNING id`
 }
+
+// //reaction
+func CreateReactionQuery() string {
+
+	return `INSERT INTO reaction_on_chat_models( reaction , msg_id , reactor_id , chat_id )
+	VALUES( $1 , $2 ,  $3, $4) RETURNING id`
+}

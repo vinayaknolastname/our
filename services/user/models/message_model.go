@@ -16,4 +16,5 @@ type MessageModel struct {
 	ReadedBy     pq.Int32Array `gorm:"type:int[];index"`
 	IsDeleted    bool          `gorm:"default:FALSE;index"`
 	Seq          int32         `gorm:"NOT NULL;index"`
+	MediaLink    string        `gorm:""`
 }
