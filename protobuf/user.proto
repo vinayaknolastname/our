@@ -48,7 +48,7 @@ message Message{
 message SaveMessageReactionReq{
     int32 msgId = 1;
     string reaction = 2;
-    string reactorId  = 3;
+    int32 reactorId  = 3;
     int32 chatId =  4;
 }
 

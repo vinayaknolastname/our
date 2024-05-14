@@ -6,7 +6,8 @@ require (
 	github.com/golang/protobuf v1.5.4
 	github.com/lib/pq v1.10.9
 	github.com/sirupsen/logrus v1.9.3
-	github.com/vinayaknolastname/our v0.0.0-20240514050450-62abd6f44f93
+	github.com/vinayaknolastname/our v0.0.0-20240514110044-e7b0eae67100
+
 )
 
 require (
