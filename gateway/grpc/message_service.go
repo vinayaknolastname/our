@@ -19,17 +19,11 @@ func CreateReaction(service UserGrpcService, reactionData types.ReactionOnMessag
 	client := user.NewUserServiceClient(connection.conn)
 	resp, err := client.ReactMessage(context.Background(), &user.SaveMessageReactionReq{MsgId: reactionData.MessageId, ReactorId: reactionData.ReactorId, ChatId: reactionData.ChatId, Reaction: reactionData.Reaction})
 	if err != nil {
-		log.Fatalf("User Created: %v", err)
+		log.Fatalf("Create Reaction Fail: %v", err)
 	}
 
-	log.Printf("User Created: %s", resp)
-	// respto := CommonResponse{
-	// 	statusCode: resp.ResData.StatusCode,
-	// 	success:    resp.ResData.Success,
-	// 	message:    resp.ResData.Message,ccd
-	// }
+	// log.Printf("Create Reaction Success: %s", resp)
 
-	utils.LogSomething("User Created  User", resp, 1)
+	utils.LogSomething("Create Reaction Seuccess", resp, 1)
 
-	// c.JSON(int(resp.ResData.StatusCode), resp.ResData)
 }
