@@ -2,11 +2,13 @@ package utils
 
 type Config struct {
 	GatewayPort int32
+	Cloudinary  string
 }
 
 func GetConfig() *Config {
 	return &Config{
 		GatewayPort: 5000,
+		Cloudinary:  "d",
 	}
 }
 

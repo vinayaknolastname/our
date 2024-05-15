@@ -12,9 +12,13 @@ require (
 
 require (
 	github.com/bytedance/sonic/loader v0.1.1 // indirect
+	github.com/cloudinary/cloudinary-go/v2 v2.7.0 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect
 	github.com/cloudwego/iasm v0.2.0 // indirect
+	github.com/creasty/defaults v1.5.1 // indirect
 	github.com/go-playground/validator/v10 v10.20.0 // indirect
+	github.com/google/uuid v1.6.0 // indirect
+	github.com/gorilla/schema v1.2.0 // indirect
 	github.com/kr/text v0.2.0 // indirect
 )
 
@@ -46,6 +50,7 @@ require (
 
 require (
 	github.com/antonfisher/nested-logrus-formatter v1.3.1
+	github.com/cloudinary/cloudinary-go v1.7.0
 	github.com/gin-contrib/cors v1.7.2
 	github.com/gin-gonic/gin v1.9.1
 	github.com/gorilla/websocket v1.5.1

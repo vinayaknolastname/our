@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	mediaservice "github.com/vinayaknolastname/our/gateway/media_service"
 	"github.com/vinayaknolastname/our/gateway/router"
 	"github.com/vinayaknolastname/our/gateway/rtc/ws"
 )
@@ -17,6 +18,8 @@ func main() {
 
 	hub := ws.NewWsManager()
 	wshandler := ws.NewHandler(hub)
+
+	mediaservice.NewMediaDB()
 
 	fmt.Println("sssss")
 

@@ -6,6 +6,7 @@ import (
 	// grpcHandlers "github.com/vinayaknolastname/our/gateway/grpc"
 	// grpcHandlers "github.com/vinayaknolastname/our/gateway/grpc"
 	grpcHandlers "github.com/vinayaknolastname/our/gateway/grpc"
+	mediaservice "github.com/vinayaknolastname/our/gateway/media_service"
 	"github.com/vinayaknolastname/our/gateway/utils"
 )
 
@@ -89,16 +90,52 @@ func (w *WsManager) RunWsManager() {
 func broad(w *WsManager) {
 	for {
 		m := <-w.Message
+		if m.MsgType == "" || m.Content == "" {
+			utils.LogSomething("no content or msg", "", 0)
+			continue
+		}
 		utils.LogSomething("msgHub", w.Chats[m.ChatId].Clients, 1)
-		if _, ok := w.Chats[m.ChatId]; ok {
-			membersOfChat := w.Chats[m.ChatId].Members
-			checkOtherUserIsConnectedOrNot(membersOfChat, m.ChatId, w.Chats[m.ChatId].Clients, m.Content, m.SenderId)
-			for _, cl := range w.Chats[m.ChatId].Clients {
 
-				cl.Message <- m
-			}
+		switch m.MsgType {
+		case "msg":
+			doThisOnMsg(w, m)
+		case "img":
+			doThisOnImgMsg(w, m)
+		case "reaction":
+			doThisOnReaction(w, m)
+		}
+
+	}
+}
+
+func doThisOnMsg(w *WsManager, m *Message) {
+	if _, ok := w.Chats[m.ChatId]; ok {
+		membersOfChat := w.Chats[m.ChatId].Members
+		checkOtherUserIsConnectedOrNot(membersOfChat, m.ChatId, w.Chats[m.ChatId].Clients, m.Content, m.SenderId)
+		for _, cl := range w.Chats[m.ChatId].Clients {
+
+			cl.Message <- m
 		}
 	}
+}
+
+func doThisOnImgMsg(w *WsManager, m *Message) {
+	if _, ok := w.Chats[m.ChatId]; ok {
+		// grpcHandlers.CreateMessage(userId, chatId, content, tempDeliveredList)
+		//
+		// membersOfChat := w.Chats[m.ChatId].Members
+
+		mediaservice.HandleImgMessage(m.MediaLink)
+
+		// checkOtherUserIsConnectedOrNot(membersOfChat, m.ChatId, w.Chats[m.ChatId].Clients, m.Content, m.SenderId)
+		// for _, cl := range w.Chats[m.ChatId].Clients {
+		// 	cl.Message <- m
+		// }
+	}
+}
+
+func doThisOnReaction(w *WsManager, m *Message) {
+
 }
 
 func checkOtherUserIsConnectedOrNot(membersOfChat []int32, chatId int32, clientsOfChat map[int32]*Client, content string, userId int32) {
