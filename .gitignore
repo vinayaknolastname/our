@@ -1,3 +1,3 @@
 *.yaml
 
-gateway/utils/config.go
+gateway\utils\config.go
