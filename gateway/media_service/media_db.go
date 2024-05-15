@@ -26,5 +26,6 @@ func NewMediaDB() {
 	MDB = &MediaDB{
 		MediaDB: cld,
 	}
-	// return cld, ctx
+
+	d // return cld, ctx
 }
