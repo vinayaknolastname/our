@@ -17,6 +17,8 @@ message CreateMessageRequest{
     int32 chatId = 2;
     string content = 3;
     repeated int32 isDelivered = 4;
+    string mediaLink = 5;
+
 }
 
 message GetMessageRequest{

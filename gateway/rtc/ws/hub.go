@@ -111,7 +111,7 @@ func broad(w *WsManager) {
 func doThisOnMsg(w *WsManager, m *Message) {
 	if _, ok := w.Chats[m.ChatId]; ok {
 		membersOfChat := w.Chats[m.ChatId].Members
-		checkOtherUserIsConnectedOrNot(membersOfChat, m.ChatId, w.Chats[m.ChatId].Clients, m.Content, m.SenderId)
+		checkOtherUserIsConnectedOrNot(membersOfChat, m.ChatId, w.Chats[m.ChatId].Clients, m.Content, m.SenderId, "")
 		for _, cl := range w.Chats[m.ChatId].Clients {
 
 			cl.Message <- m
@@ -123,10 +123,15 @@ func doThisOnImgMsg(w *WsManager, m *Message) {
 	if _, ok := w.Chats[m.ChatId]; ok {
 		// grpcHandlers.CreateMessage(userId, chatId, content, tempDeliveredList)
 		//
-		// membersOfChat := w.Chats[m.ChatId].Members
+		membersOfChat := w.Chats[m.ChatId].Members
 
-		mediaservice.HandleImgMessage(m.MediaLink)
+		imgLink := mediaservice.HandleImgMessage(m.MediaLink)
 
+		checkOtherUserIsConnectedOrNot(membersOfChat, m.ChatId, w.Chats[m.ChatId].Clients, m.Content, m.SenderId, imgLink)
+		for _, cl := range w.Chats[m.ChatId].Clients {
+
+			cl.Message <- m
+		}
 		// checkOtherUserIsConnectedOrNot(membersOfChat, m.ChatId, w.Chats[m.ChatId].Clients, m.Content, m.SenderId)
 		// for _, cl := range w.Chats[m.ChatId].Clients {
 		// 	cl.Message <- m
@@ -138,7 +143,7 @@ func doThisOnReaction(w *WsManager, m *Message) {
 
 }
 
-func checkOtherUserIsConnectedOrNot(membersOfChat []int32, chatId int32, clientsOfChat map[int32]*Client, content string, userId int32) {
+func checkOtherUserIsConnectedOrNot(membersOfChat []int32, chatId int32, clientsOfChat map[int32]*Client, content string, userId int32, ImgLink string) {
 	var tempDeliveredList []int32
 	for i := 0; i < len(membersOfChat); i++ {
 		if _, ok := clientsOfChat[membersOfChat[i]]; ok {

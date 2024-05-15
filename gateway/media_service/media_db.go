@@ -11,10 +11,11 @@ type MediaDB struct {
 
 var MDB *MediaDB
 
-func NewMediaDB() {
+func NewMediaDB(db string) {
 	// Add your Cloudinary credentials, set configuration parameter
 	// Secure=true to return "https" URLs, and create a context
 	//===================
+	cld, err := cloudinary.NewFromURL(db)
 
 	if err != nil {
 		utils.LogSomething("cld", err, 0)
@@ -27,5 +28,5 @@ func NewMediaDB() {
 		MediaDB: cld,
 	}
 
-	d // return cld, ctx
+	// return cld, ctx
 }

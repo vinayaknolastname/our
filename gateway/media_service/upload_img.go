@@ -12,7 +12,7 @@ import (
 	"github.com/vinayaknolastname/our/gateway/utils"
 )
 
-func HandleImgMessage(base64Data string) {
+func HandleImgMessage(base64Data string) (imgLink string, err error) {
 
 	imageData, err := base64.StdEncoding.DecodeString(string(base64Data))
 	if err != nil {
@@ -31,11 +31,12 @@ func HandleImgMessage(base64Data string) {
 	fmt.Println("Image received and saved successfully")
 	// 	var ctx = context.Background()
 	// resp, err := cld.Upload.Upload(ctx, "my_picture.jpg", uploader.UploadParams{PublicID: "my_image"});
-	StoreImgInCloud(imgPath)
+	img := StoreImgInCloud(imgPath)
+	return img, nil
 
 }
 
-func StoreImgInCloud(path string) {
+func StoreImgInCloud(path string) string {
 	ctx := context.Background()
 
 	file, err := os.ReadFile(path)
@@ -52,6 +53,8 @@ func StoreImgInCloud(path string) {
 		fmt.Println("error", err)
 	}
 
+	// grpcHandlers.CreateMessage()
 	// Log the delivery URL
 	fmt.Println("****2. Upload an image****\nDelivery URL:", resp.SecureURL, "\n")
+	return resp.SecureURL
 }
