@@ -3,6 +3,7 @@ module github.com/vinayaknolastname/our/gateway
 go 1.22.2
 
 require (
+	github.com/cloudinary/cloudinary-go/v2 v2.7.0
 	github.com/golang/protobuf v1.5.4
 	github.com/lib/pq v1.10.9
 	github.com/sirupsen/logrus v1.9.3
@@ -12,7 +13,6 @@ require (
 
 require (
 	github.com/bytedance/sonic/loader v0.1.1 // indirect
-	github.com/cloudinary/cloudinary-go/v2 v2.7.0 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect
 	github.com/cloudwego/iasm v0.2.0 // indirect
 	github.com/creasty/defaults v1.5.1 // indirect
@@ -21,7 +21,6 @@ require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/schema v1.2.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
-	github.com/kr/text v0.2.0 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/sagikazarmark/locafero v0.4.0 // indirect
@@ -65,7 +64,6 @@ require (
 
 require (
 	github.com/antonfisher/nested-logrus-formatter v1.3.1
-	github.com/cloudinary/cloudinary-go v1.7.0
 	github.com/gin-contrib/cors v1.7.2
 	github.com/gin-gonic/gin v1.9.1
 	github.com/gorilla/websocket v1.5.1
