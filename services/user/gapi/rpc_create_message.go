@@ -20,7 +20,7 @@ func (server *gAPI) SendMessage(ctx context.Context, req *user.CreateMessageRequ
 
 	var id int32
 
-	result := server.Db.Db.QueryRow(query, req.GetContent(), req.GetChatId(), req.GetUserId(), time.Now(), false, int32(newSeq))
+	result := server.Db.Db.QueryRow(query, req.GetContent(), req.GetChatId(), req.GetUserId(), time.Now(), false, int32(newSeq), req.GetMediaLink())
 
 	responseBad := &user.CommonResponse{
 		StatusCode: http.StatusBadRequest,
