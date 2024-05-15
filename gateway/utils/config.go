@@ -8,7 +8,7 @@ type Config struct {
 func GetConfig() *Config {
 	return &Config{
 		GatewayPort: 5000,
-		Cloudinary:  "ddd",
+		Cloudinary:  "dddd",
 	}
 }
 
