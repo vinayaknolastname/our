@@ -10,7 +10,7 @@ func CreateUserQuery() string {
 
 func CreateMessageQuery() string {
 
-	return `INSERT INTO message_models(  content , chat_id , sender_id , date_time , is_deleted , seq )
+	return `INSERT INTO message_models(  content , chat_id , sender_id , date_time , is_deleted , seq , media_link )
 	VALUES( $1 , $2 ,  $3 , $4 , $5 , $6) RETURNING id`
 }
 
