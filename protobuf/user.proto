@@ -23,7 +23,7 @@ message CreateMessageRequest{
 }
 
 message GetReq{
-
+int32  id = 1 ;
 }
 
 message GetAllChatsResponse{

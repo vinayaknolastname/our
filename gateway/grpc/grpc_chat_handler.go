@@ -4,25 +4,23 @@ import (
 	context "context"
 	"log"
 
+	"github.com/gin-gonic/gin"
 	user "github.com/vinayaknolastname/our/services/user/proto_gen"
 )
 
-func GetAllChats(userGrpcService UserGrpcService) interface{} {
-	if userGrpcService.conn == nil {
-		ConnectUserServiceGrpc()
-	}
+func GetAllChats(c *gin.Context) {
 
 	client := user.NewUserServiceClient(connection.conn)
-	resp, err := client.GetMessages(context.Background(), &user.GetMessageRequest{UserId: userId, ChatId: chatId, Seq: seq})
+	resp, err := client.GetAllChats(context.Background(), &user.GetReq{})
 	if err != nil {
 		log.Fatalf("Failed to call Get Messages: %v", err)
 	}
 
 	// log.Fatalf("Failed to call Get Messages: %v", resp)
-	if len(resp.Message) > 0 {
-		return resp.Message
-	}
+	// if len(resp.Message) > 0 {
+	// 	return resp.Message
+	// }
 
-	return nil
+	c.JSON(int(resp.ResData.StatusCode), resp)
 
 }

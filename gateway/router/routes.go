@@ -53,7 +53,7 @@ func InitRouter(wshandler ws.Handler) {
 		user.POST("/createUser", grpcHandlers.ConnectUserServiceGrpcMiddleWare, grpcHandlers.CreateUser)
 		user.POST("/getUserAndChats/:userId", grpcHandlers.ConnectUserServiceGrpcMiddleWare, grpcHandlers.GetUserAndChats)
 		user.POST("/startChat", grpcHandlers.ConnectUserServiceGrpcMiddleWare, grpcHandlers.StartChat)
-		user.POST("/getAllChats", grpcHandlers.ConnectUserServiceGrpcMiddleWare, grpcHandlers.)
+		user.POST("/getAllChats", grpcHandlers.ConnectUserServiceGrpcMiddleWare, grpcHandlers.GetAllChats)
 
 		// user.GET("/getUserChats/:chatId", grpcHandlers.ConnectUserServiceGrpc, grpcHandlers.CreateUser)
 		// user.GET("/join/:chatId", grpcHandlers.ConnectUserServiceGrpc, grpcHandlers.CreateUser)
