@@ -6,20 +6,22 @@ import (
 	"log"
 
 	_ "github.com/lib/pq"
-
-	"github.com/vinayaknolastname/our/services/common/models"
+	"github.com/vinayaknolastname/our/services/user/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-type Storage struct {
-	DB *sql.DB
+type Database struct {
+	Db *sql.DB
 }
 
-func ConnectDBFnc(dbstring string) *Storage {
-	fmt.Println("DbString %e", dbstring)
+func NewDB() (*Database, error) {
 
-	db, err := sql.Open("postgres", dbstring)
+	postgresqlDbInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+		"password=%s dbname=%s sslmode=disable",
+		"localhost", 5432, "postgres", "ourdb", "postgres")
+
+	db, err := sql.Open("postgres", postgresqlDbInfo)
 
 	if err != nil {
 		fmt.Println("Cannot Open Db %e", err)
@@ -29,22 +31,37 @@ func ConnectDBFnc(dbstring string) *Storage {
 
 	if err != nil {
 		log.Fatalln(" Cannot Ping Db %e", err)
-
 	}
 
+	gormAutoMigrate(db, postgresqlDbInfo)
+
+	return &Database{Db: db}, nil
+
+}
+
+func closeDB(d *Database) {
+	d.Db.Close()
+
+}
+
+func gormAutoMigrate(d *sql.DB, dbstring string) {
 	gormDB, err := gorm.Open(postgres.Open(dbstring), &gorm.Config{})
 
 	if err != nil {
 
-		log.Fatalf("gorm error", err)
+		log.Printf("gorm error", err)
 	}
 
-	err = gormDB.AutoMigrate(&models.PgBasicModel{}, &models.PgAddressModel{}, &models.PgFeaturesModel{})
+	err = gormDB.AutoMigrate(&models.UsersModel{}, &models.ChatsModel{}, &models.MessageModel{}, &models.ReactionOnChatModel{})
 
 	if err != nil {
-		log.Fatalf("autoMigrate error", err)
+
+		log.Printf("autoMigrate error", err)
 	}
-	log.Printf("autoMigrate done", err)
-	return &Storage{DB: db}
+	log.Printf("autoMigrate error", err)
 
 }
+
+// func (d *Database) getDB() *sql.DB {
+// 	return d.db
+// }

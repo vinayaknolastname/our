@@ -21,8 +21,7 @@ func main() {
 		log.Println("cofig load error  %err ", err)
 	}
 
-	storage, err := db.NewDB()
-
+	storage, err := 
 	if err != nil {
 		log.Println("db load error  %err ", err)
 	}
