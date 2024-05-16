@@ -12,10 +12,10 @@ import (
 func (server *gAPI) CreateUser(ctx context.Context, req *user.CreateUserRequest) (*user.UserResponse, error) {
 
 	query := db.CreateUserQuery()
-	result, err := server.Db.Db.Exec(query, req.GetName(), req.GetPhoneNumber())
+	result := server.Db.Db.QueryRow(query, req.GetName(), req.GetPhoneNumber())
 
-	if err != nil {
-		utils.LogSomething("err in creating pg", err.Error(), 0)
+	if result.Err() != nil {
+		utils.LogSomething("err in creating pg", result.Err(), 0)
 	}
 
 	utils.LogSomething("user created", result, 0)

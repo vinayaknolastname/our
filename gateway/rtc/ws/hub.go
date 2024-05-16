@@ -100,7 +100,7 @@ func broad(w *WsManager) {
 		case "msg":
 			doThisOnMsg(w, m)
 		case "img":
-			doThisOnImgMsg(w, m)
+			go doThisOnImgMsg(w, m)
 		case "reaction":
 			doThisOnReaction(w, m)
 		}
@@ -125,8 +125,13 @@ func doThisOnImgMsg(w *WsManager, m *Message) {
 		//
 		membersOfChat := w.Chats[m.ChatId].Members
 
-		imgLink := mediaservice.HandleImgMessage(m.MediaLink)
+		imgLink, err := mediaservice.HandleImgMessage(m.MediaLink)
 
+		if err != nil {
+			utils.LogSomething("Img Mesage err", "dd", 0)
+		}
+
+		m.MediaLink = imgLink
 		checkOtherUserIsConnectedOrNot(membersOfChat, m.ChatId, w.Chats[m.ChatId].Clients, m.Content, m.SenderId, imgLink)
 		for _, cl := range w.Chats[m.ChatId].Clients {
 
@@ -140,7 +145,28 @@ func doThisOnImgMsg(w *WsManager, m *Message) {
 }
 
 func doThisOnReaction(w *WsManager, m *Message) {
+	if _, ok := w.Chats[m.ChatId]; ok {
+		// grpcHandlers.CreateMessage(userId, chatId, content, tempDeliveredList)
+		//
+		// membersOfChat := w.Chats[m.ChatId].Members
 
+		grpcHandlers.CreateReaction(grpcHandlers.UserGrpcService{}, m.ReactionData[len(m.ReactionData)-1])
+
+		// if err != nil {
+		// 	utils.LogSomething("Img Mesage err", "dd", 0)
+		// }
+
+		// m.MediaLink = imgLink
+		// checkOtherUserIsConnectedOrNot(membersOfChat, m.ChatId, w.Chats[m.ChatId].Clients, m.Content, m.SenderId, imgLink)
+		for _, cl := range w.Chats[m.ChatId].Clients {
+
+			cl.Message <- m
+		}
+		// checkOtherUserIsConnectedOrNot(membersOfChat, m.ChatId, w.Chats[m.ChatId].Clients, m.Content, m.SenderId)
+		// for _, cl := range w.Chats[m.ChatId].Clients {
+		// 	cl.Message <- m
+		// }
+	}
 }
 
 func checkOtherUserIsConnectedOrNot(membersOfChat []int32, chatId int32, clientsOfChat map[int32]*Client, content string, userId int32, ImgLink string) {
@@ -152,7 +178,7 @@ func checkOtherUserIsConnectedOrNot(membersOfChat []int32, chatId int32, clients
 		}
 
 	}
-	grpcHandlers.CreateMessage(userId, chatId, content, tempDeliveredList)
+	grpcHandlers.CreateMessage(userId, chatId, content, tempDeliveredList, ImgLink)
 
 }
 

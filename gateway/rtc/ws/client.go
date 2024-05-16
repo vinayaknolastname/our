@@ -7,6 +7,7 @@ import (
 
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/gorilla/websocket"
+	"github.com/vinayaknolastname/our/gateway/types"
 )
 
 type Client struct {
@@ -24,18 +25,19 @@ type Reaction struct {
 	Reaction  string `json:"Reaction"`
 }
 type Message struct {
-	Id          int32                `json:"id"`
-	Content     string               `json:"content"`
-	ChatId      int32                `json:"roomID"`
-	Username    string               `json:"username"`
-	SenderId    int32                `json:"senderId"`
-	DateTime    *timestamp.Timestamp `json:"dateTime"`
-	DeliveredTo []int32              `json:"deliveredTo"`
-	ReadedBy    []int32              `json:"readedBy"`
-	IsDeleted   bool                 `json:"isDeleted"`
-	Seq         int32                `json:"seq"`
-	MsgType     string               `json:"msg_type"`
-	MediaLink   string               `json:"media_link"`
+	Id           int32                           `json:"id"`
+	Content      string                          `json:"content"`
+	ChatId       int32                           `json:"roomID"`
+	Username     string                          `json:"username"`
+	SenderId     int32                           `json:"senderId"`
+	DateTime     *timestamp.Timestamp            `json:"dateTime"`
+	DeliveredTo  []int32                         `json:"deliveredTo"`
+	ReadedBy     []int32                         `json:"readedBy"`
+	IsDeleted    bool                            `json:"isDeleted"`
+	Seq          int32                           `json:"seq"`
+	MsgType      string                          `json:"msg_type"`
+	MediaLink    string                          `json:"media_link"`
+	ReactionData []types.ReactionOnMessageStruct `json:"reactions"`
 }
 
 func (c *Client) writeMessage() {
@@ -86,12 +88,21 @@ func (c *Client) readMessage(h *WsManager) {
 		}
 		fmt.Println("readmsg", msg)
 
+		if formatedWebSocket.Type == "reaction" {
+			msg.ReactionData = append(msg.ReactionData, types.ReactionOnMessageStruct{
+				ChatId:    msg.ChatId,
+				MessageId: formatedWebSocket.MsgId,
+				Reaction:  formatedWebSocket.Content,
+				ReactorId: c.ID,
+			})
+		}
 		h.Message <- msg
 
 	}
 }
 
 type WsMessage struct {
+	MsgId     int32  `json:"msgId"`
 	Type      string `json:"type"`
 	Content   string `json:"content"`
 	MediaLink string `json:"mediaLink"`

@@ -102,6 +102,7 @@ message Chats {
 
 message UserResponse{
     CommonResponse resData = 1;
+    User userData = 2;
 }
 
 message CommonResponse{

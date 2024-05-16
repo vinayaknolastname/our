@@ -11,6 +11,7 @@ import (
 	"github.com/vinayaknolastname/our/gateway/types"
 	"github.com/vinayaknolastname/our/gateway/utils"
 	user "github.com/vinayaknolastname/our/services/user/proto_gen"
+
 	"google.golang.org/grpc"
 	// pb "google.golang.org/grpc/examples/route_guide/routeguide"
 )
@@ -20,7 +21,7 @@ var opts []grpc.DialOption
 var (
 	tls                = flag.Bool("tls", false, "Connection uses TLS if true, else plain TCP")
 	caFile             = flag.String("ca_file", "", "The file containing the CA root cert file")
-	serverAddr         = flag.String("addr", "localhost:9000", "The server address in the format of host:port")
+	serverAddr         = flag.String("addr", "localhost:55387", "The server address in the format of host:port")
 	serverHostOverride = flag.String("server_host_override", "x.test.example.com", "The server name used to verify the hostname returned by the TLS handshake")
 )
 
@@ -63,9 +64,9 @@ type CommonResponse struct {
 func CreateUser(c *gin.Context) {
 	utils.LogSomething("Create User Start", "", 1)
 
-	name := c.Param("name")
+	name := c.Query("name")
 	// intUserId, err := strconv.Atoi(userId)
-	phone_number := c.Param("phone")
+	phone_number := c.Query("phone")
 	intPhone, err := strconv.Atoi(phone_number)
 
 	client := user.NewUserServiceClient(connection.conn)
@@ -222,7 +223,7 @@ func CreateMessage(userId int32, chatId int32, content string, isDelivered []int
 	// intUserId, err := strconv.Atoi(userId)
 
 	client := user.NewUserServiceClient(connection.conn)
-	resp, err := client.SendMessage(context.Background(), &user.CreateMessageRequest{UserId: userId, ChatId: chatId, Content: content, IsDelivered: isDelivered})
+	resp, err := client.SendMessage(context.Background(), &user.CreateMessageRequest{UserId: userId, ChatId: chatId, Content: content, IsDelivered: isDelivered, MediaLink: imgLink})
 	if err != nil {
 		log.Fatalf("Failed to call CreateMessage: %v", err)
 	}
