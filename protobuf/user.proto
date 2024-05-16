@@ -106,8 +106,8 @@ message Chats {
     int32 id = 1;
     string name = 2;
     int32 type = 3;
-    repeated int32 members = 4;
-    int32 last_seq = 5;
+    repeated int32 members = 4 [json_name = "members"];
+    int32 last_seq = 5 [json_name = "last_seq"];
 }
 
 

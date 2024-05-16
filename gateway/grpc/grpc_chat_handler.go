@@ -11,7 +11,7 @@ import (
 func GetAllChats(c *gin.Context) {
 
 	client := user.NewUserServiceClient(connection.conn)
-	resp, err := client.GetAllChats(context.Background(), &user.GetReq{})
+	resp, err := client.GetAllChats(context.Background(), &user.GetReq{Id: 0})
 	if err != nil {
 		log.Fatalf("Failed to call Get Messages: %v", err)
 	}

@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/lib/pq"
 	"github.com/vinayaknolastname/our/services/user/db"
 	user "github.com/vinayaknolastname/our/services/user/proto_gen"
 
@@ -19,12 +20,17 @@ func (server *gAPI) GetAllChats(ctx context.Context, req *user.GetReq) (*user.Ge
 	if err != nil {
 		utils.LogSomething("err in getting chats", err, 0)
 	}
+
+	utils.LogSomething("err in getting chats", result, 0)
+
 	var chats []*user.Chats
 	for result.Next() {
-		var tempReac *user.Chats
-		result.Scan(&tempReac.Id, &tempReac.Name, &tempReac.Type, &tempReac.Members, &tempReac.LastSeq)
+		var tempReac user.Chats
+		var member pq.Int32Array
+		result.Scan(&tempReac.Id, &tempReac.Name, &tempReac.Type, &member, &tempReac.LastSeq)
 
-		chats = append(chats, tempReac)
+		tempReac.Members = member
+		chats = append(chats, &tempReac)
 	}
 	// errSCan := result.Scan(&userData.id, &userData.name, &userData.phone_number, &userData.chats)
 
