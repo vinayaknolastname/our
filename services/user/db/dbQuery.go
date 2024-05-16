@@ -2,8 +2,17 @@ package db
 
 func CreateUserQuery() string {
 
-	return `INSERT INTO users_models( name , phone_number )
-	VALUES( $1 , $2 ) RETURNING *`
+	return `WITH inserted_row AS (
+		INSERT INTO users_models (name, phone_number)
+		VALUES ($1, $2)
+		ON CONFLICT (phone_number) DO NOTHING
+		RETURNING *
+	)
+	SELECT * FROM inserted_row
+	UNION ALL
+	SELECT * FROM users_models
+	WHERE phone_number = $2
+	LIMIT 1`
 }
 
 /////message model
@@ -37,6 +46,11 @@ func GetUserQuery() string {
 func GetChatRowQuery() string {
 
 	return `SELECT * FROM chats_models WHERE id=$1`
+}
+
+func GetAllChatsQuery() string {
+
+	return `SELECT * FROM chats_models`
 }
 
 func AddChatInUser() string {

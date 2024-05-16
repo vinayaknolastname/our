@@ -10,6 +10,7 @@ service UserService{
     rpc SendMessage(CreateMessageRequest) returns (CommonResponse);
     rpc GetMessages(GetMessageRequest) returns (MessageResponse);
     rpc ReactMessage(SaveMessageReactionReq) returns (CommonResponse);
+    rpc GetAllChats(GetReq) returns (GetAllChatsResponse);
 }
 
 message CreateMessageRequest{
@@ -19,6 +20,15 @@ message CreateMessageRequest{
     repeated int32 isDelivered = 4;
     string mediaLink = 5;
 
+}
+
+message GetReq{
+
+}
+
+message GetAllChatsResponse{
+    CommonResponse resData = 1;
+    repeated Chats Chat = 2;
 }
 
 message GetMessageRequest{
@@ -97,6 +107,7 @@ message Chats {
     string name = 2;
     int32 type = 3;
     repeated int32 members = 4;
+    int32 last_seq = 5;
 }
 
 

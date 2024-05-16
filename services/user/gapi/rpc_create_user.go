@@ -18,12 +18,17 @@ func (server *gAPI) CreateUser(ctx context.Context, req *user.CreateUserRequest)
 		utils.LogSomething("err in creating pg", result.Err(), 0)
 	}
 
+	var userData user.User
+
+	result.Scan(&userData.Id, &userData.Name, &userData.PhoneNumber, &userData.Chat)
 	utils.LogSomething("user created", result, 0)
 	response := &user.UserResponse{ResData: &user.CommonResponse{
 		StatusCode: http.StatusOK,
 		Success:    true,
 		Message:    "User Created",
-	}}
+	},
+		UserData: &userData,
+	}
 
 	utils.LogSomething("user response", response, 1)
 
