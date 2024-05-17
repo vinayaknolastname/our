@@ -5,14 +5,14 @@ import (
 	"net/http"
 
 	"github.com/lib/pq"
-	"github.com/vinayaknolastname/our/services/user/db"
-	user "github.com/vinayaknolastname/our/services/user/proto_gen"
-	"github.com/vinayaknolastname/our/utils"
+	user "github.com/vinayaknolastname/our/protobuf/user"
+	"github.com/vinayaknolastname/our/services/common/utils"
+	dbQ "github.com/vinayaknolastname/our/services/user/db"
 )
 
 func (server *gAPI) StartChat(ctx context.Context, req *user.StartChatRequest) (*user.CommonResponse, error) {
 
-	query := db.CreateChatQuery()
+	query := dbQ.CreateChatQuery()
 	var id int
 
 	utils.LogSomething("err in creating chat", req.GetName(), 1)

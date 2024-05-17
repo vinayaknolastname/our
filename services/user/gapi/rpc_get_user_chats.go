@@ -5,10 +5,9 @@ import (
 	"net/http"
 
 	"github.com/lib/pq"
-	"github.com/vinayaknolastname/our/services/user/db"
-	user "github.com/vinayaknolastname/our/services/user/proto_gen"
-
-	"github.com/vinayaknolastname/our/utils"
+	user "github.com/vinayaknolastname/our/protobuf/user"
+	"github.com/vinayaknolastname/our/services/common/utils"
+	dbQ "github.com/vinayaknolastname/our/services/user/db"
 )
 
 type GetUserModel struct {
@@ -21,7 +20,7 @@ type GetUserModel struct {
 func (server *gAPI) GetUserData(ctx context.Context, req *user.GetUserRequest) (*user.GetUserResponse, error) {
 
 	var userData GetUserModel
-	query := db.GetUserQuery()
+	query := dbQ.GetUserQuery()
 	result := server.Db.Db.QueryRow(query, req.UserId)
 
 	if result.Err() != nil {
@@ -79,7 +78,7 @@ type ChatModel struct {
 func GetUserChats(server *gAPI, chatId int32) ChatModel {
 
 	var chatModel ChatModel
-	query := db.GetChatRowQuery()
+	query := dbQ.GetChatRowQuery()
 	result := server.Db.Db.QueryRow(query, chatId)
 
 	if result.Err() != nil {

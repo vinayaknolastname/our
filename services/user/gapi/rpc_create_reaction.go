@@ -5,14 +5,14 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/vinayaknolastname/our/services/user/db"
-	user "github.com/vinayaknolastname/our/services/user/proto_gen"
-	"github.com/vinayaknolastname/our/utils"
+	user "github.com/vinayaknolastname/our/protobuf/user"
+	"github.com/vinayaknolastname/our/services/common/utils"
+	dbQ "github.com/vinayaknolastname/our/services/user/db"
 )
 
 func (server *gAPI) ReactMessage(ctx context.Context, req *user.SaveMessageReactionReq) (*user.CommonResponse, error) {
 
-	query := db.CreateReactionQuery()
+	query := dbQ.CreateReactionQuery()
 	result, err := server.Db.Db.Exec(query, req.GetReaction(), req.GetMsgId(), req.GetReactorId(), req.GetChatId())
 
 	errorResponse := &user.CommonResponse{

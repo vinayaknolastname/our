@@ -6,10 +6,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/vinayaknolastname/our/services/user/db"
-	user "github.com/vinayaknolastname/our/services/user/proto_gen"
-
-	"github.com/vinayaknolastname/our/utils"
+	user "github.com/vinayaknolastname/our/protobuf/user"
+	"github.com/vinayaknolastname/our/services/common/utils"
+	dbQ "github.com/vinayaknolastname/our/services/user/db"
 )
 
 type Message struct {
@@ -80,7 +79,7 @@ func (server *gAPI) GetMessages(ctx context.Context, req *user.GetMessageRequest
 
 func GetMessage(server *gAPI, seq int32, chatId int32) (*user.Message, error) {
 	var message user.Message
-	query := db.GetMessageQuery()
+	query := dbQ.GetMessageQuery()
 	msgResult := server.Db.Db.QueryRow(query, chatId, seq)
 
 	if msgResult.Err() != nil {
@@ -102,7 +101,7 @@ func GetMessage(server *gAPI, seq int32, chatId int32) (*user.Message, error) {
 }
 
 func GetReactions(server *gAPI, msgId int32) []*user.MessageReaction {
-	queryReac := db.GetReactionQuery()
+	queryReac := dbQ.GetReactionQuery()
 	reacResult, err := server.Db.Db.Query(queryReac, msgId)
 	if err != nil {
 		utils.LogSomething("err in getting reactions", err, 0)
