@@ -1,4 +1,4 @@
-package db
+package dbQ
 
 func CreateUserQuery() string {
 

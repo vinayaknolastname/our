@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/vinayaknolastname/our/services/user/db"
-	user "github.com/vinayaknolastname/our/services/user/proto_gen"
-	"github.com/vinayaknolastname/our/utils"
+	user "github.com/vinayaknolastname/our/protobuf/user"
+	"github.com/vinayaknolastname/our/services/common/utils"
+	dbQ "github.com/vinayaknolastname/our/services/user/db"
 )
 
 func (server *gAPI) SendMessage(ctx context.Context, req *user.CreateMessageRequest) (*user.CommonResponse, error) {
@@ -16,7 +16,7 @@ func (server *gAPI) SendMessage(ctx context.Context, req *user.CreateMessageRequ
 
 	newSeq := chat.seq + 1
 
-	query := db.CreateMessageQuery()
+	query := dbQ.CreateMessageQuery()
 
 	var id int32
 
@@ -49,7 +49,7 @@ func (server *gAPI) SendMessage(ctx context.Context, req *user.CreateMessageRequ
 
 	utils.LogSomething("user response", response, 1)
 
-	queryUpdateSeq := db.UpdateSeqInChat()
+	queryUpdateSeq := dbQ.UpdateSeqInChat()
 	_, err := server.Db.Db.Exec(queryUpdateSeq, newSeq, req.GetChatId())
 	if err != nil {
 		utils.LogSomething("errro in update seq", err, 0)
@@ -60,7 +60,7 @@ func (server *gAPI) SendMessage(ctx context.Context, req *user.CreateMessageRequ
 }
 
 func AddDeliveryDataInDb(server *gAPI, messageId int32, deliveredTo int32) {
-	query := db.AddDeliveredToInMessageProper()
+	query := dbQ.AddDeliveredToInMessageProper()
 	result, err := server.Db.Db.Exec(query, messageId, deliveredTo)
 
 	if err != nil {

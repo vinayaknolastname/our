@@ -4,14 +4,14 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/vinayaknolastname/our/services/user/db"
-	user "github.com/vinayaknolastname/our/services/user/proto_gen"
-	"github.com/vinayaknolastname/our/utils"
+	user "github.com/vinayaknolastname/our/protobuf/user"
+	"github.com/vinayaknolastname/our/services/common/utils"
+	dbQ "github.com/vinayaknolastname/our/services/user/db"
 )
 
 func (server *gAPI) CreateUser(ctx context.Context, req *user.CreateUserRequest) (*user.UserResponse, error) {
 
-	query := db.CreateUserQuery()
+	query := dbQ.CreateUserQuery()
 	result := server.Db.Db.QueryRow(query, req.GetName(), req.GetPhoneNumber())
 
 	if result.Err() != nil {
@@ -46,7 +46,7 @@ func (server *gAPI) AddChatInUsersModel(userId, chatId int32) {
 	// }
 
 	// if len(chats) == 0 {
-	queryPro := db.AddChatInUserProper()
+	queryPro := dbQ.AddChatInUserProper()
 	res, err := server.Db.Db.Exec(queryPro, userId, chatId)
 	if err != nil {
 		utils.LogSomething("err in add chat in Users Model when no data before err", err, 0)

@@ -1,8 +1,9 @@
 package gApi
 
 import (
-	"github.com/vinayaknolastname/our/services/user/db"
-	user "github.com/vinayaknolastname/our/services/user/proto_gen"
+	user "github.com/vinayaknolastname/our/protobuf/user"
+	"github.com/vinayaknolastname/our/services/common/db"
+	// user "github.com/vinayaknolastname/our/services/user/proto_gen"
 )
 
 type gAPI struct {
