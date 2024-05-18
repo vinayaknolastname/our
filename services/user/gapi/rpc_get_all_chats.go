@@ -5,16 +5,15 @@ import (
 	"net/http"
 
 	"github.com/lib/pq"
-	"github.com/vinayaknolastname/our/services/user/db"
-	user "github.com/vinayaknolastname/our/services/user/proto_gen"
-
-	"github.com/vinayaknolastname/our/utils"
+	user "github.com/vinayaknolastname/our/protobuf/user"
+	"github.com/vinayaknolastname/our/services/common/utils"
+	dbQ "github.com/vinayaknolastname/our/services/user/db"
 )
 
 func (server *gAPI) GetAllChats(ctx context.Context, req *user.GetReq) (*user.GetAllChatsResponse, error) {
 
 	// var userData GetUserModel
-	query := db.GetAllChatsQuery()
+	query := dbQ.GetAllChatsQuery()
 	result, err := server.Db.Db.Query(query)
 
 	if err != nil {
@@ -69,7 +68,7 @@ func (server *gAPI) GetAllChats(ctx context.Context, req *user.GetReq) (*user.Ge
 func GetAllChats(server *gAPI, chatId int32) ChatModel {
 
 	var chatModel ChatModel
-	query := db.GetAllChatsQuery()
+	query := dbQ.GetAllChatsQuery()
 	result, err := server.Db.Db.Query(query, chatId)
 
 	if err != nil {

@@ -1,11 +1,11 @@
 package types
 
-import (
-	"context"
+// import (
+// 	"context"
 
-	admin "github.com/vinayaknolastname/our/services/common/admin"
-)
+// 	admin "github.com/vinayaknolastname/our/services/common/admin"
+// )
 
-type AdminService interface {
-	CreatePG(context.Context, admin.CreatePGRequest) error
-}
+// type AdminService interface {
+// 	CreatePG(context.Context, admin.CreatePGRequest) error
+// }
