@@ -1,4 +1,4 @@
-module github.com/vinayaknolastname/our
+module github.com/vinayaknolastname/our/services
 
 go 1.18
 
