@@ -1,6 +1,6 @@
 module github.com/vinayaknolastname/our/gateway
 
-go 1.22.2
+go 1.18
 
 require (
 	github.com/cloudinary/cloudinary-go/v2 v2.7.0

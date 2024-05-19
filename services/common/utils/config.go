@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/dvln/viper"
@@ -39,5 +40,12 @@ func LoadConfig(path string) (config Config, err error) {
 	}
 
 	err = viper.Unmarshal(&config)
+	if err != nil {
+		log.Fatalf("unable to decode into struct, %v", err)
+	}
+	fmt.Printf("host [%s]\n", config.GrpcPort)
+	// fmt.Printf("Port [%d]\n", ConfigStruct.Port)
+	// fmt.Printf("Enabled [%t]", ConfigStruct.Enabled)
+
 	return
 }
