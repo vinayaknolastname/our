@@ -4,11 +4,10 @@ import (
 	"log"
 	"net"
 
-	"github.com/vinayaknolastname/our/protobuf/user"
 	"github.com/vinayaknolastname/our/services/common/db"
 	"github.com/vinayaknolastname/our/services/common/utils"
 	gApi "github.com/vinayaknolastname/our/services/user/gapi"
-
+	user "github.com/vinayaknolastname/our/services/user/proto_gen"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
