@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/dvln/viper"
+	"github.com/spf13/viper"
 )
 
 type Config struct {

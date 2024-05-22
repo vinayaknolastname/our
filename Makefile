@@ -32,3 +32,7 @@ build_user:
 	@echo Moving file..
 	mv ${USER_BINARY} deploy/build
 	@echo Done!
+
+make_user_docker:
+
+   docker buildx build -t your-image-name -f dockerFile .

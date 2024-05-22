@@ -9,6 +9,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	grpcHandlers "github.com/vinayaknolastname/our/gateway/grpc"
+	mediaservice "github.com/vinayaknolastname/our/gateway/media_service"
 	"github.com/vinayaknolastname/our/gateway/rtc/ws"
 	"github.com/vinayaknolastname/our/gateway/utils"
 )
@@ -41,6 +42,8 @@ func InitRouter(wshandler ws.Handler) {
 
 	router.Use(gin.Recovery())
 
+	router.MaxMultipartMemory = 200 << 20 // 8 MB
+
 	api := router.Group("/api")
 
 	v1 := api.Group("/v1")
@@ -54,6 +57,7 @@ func InitRouter(wshandler ws.Handler) {
 		user.POST("/getUserAndChats/:userId", grpcHandlers.ConnectUserServiceGrpcMiddleWare, grpcHandlers.GetUserAndChats)
 		user.POST("/startChat", grpcHandlers.ConnectUserServiceGrpcMiddleWare, grpcHandlers.StartChat)
 		user.POST("/getAllChats", grpcHandlers.ConnectUserServiceGrpcMiddleWare, grpcHandlers.GetAllChats)
+		user.POST("/uploadFile/:userId", grpcHandlers.ConnectUserServiceGrpcMiddleWare, mediaservice.FileUpload)
 
 		// user.GET("/getUserChats/:chatId", grpcHandlers.ConnectUserServiceGrpc, grpcHandlers.CreateUser)
 		// user.GET("/join/:chatId", grpcHandlers.ConnectUserServiceGrpc, grpcHandlers.CreateUser)

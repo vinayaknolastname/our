@@ -2,41 +2,77 @@ package mediaservice
 
 import (
 	"context"
-	"encoding/base64"
 	"fmt"
-	"log"
+	"mime/multipart"
+	"net/http"
 	"os"
+	"path/filepath"
+	"runtime"
+	"strconv"
 
 	"github.com/cloudinary/cloudinary-go/v2/api"
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
+	"github.com/gin-gonic/gin"
+	"github.com/vinayaknolastname/our/gateway/rtc/ws"
 	"github.com/vinayaknolastname/our/gateway/utils"
 )
 
-func HandleImgMessage(base64Data string) (imgLink string, err error) {
+var (
+	_, b, _, _ = runtime.Caller(0)
+	RootPath   = filepath.Join(filepath.Dir(b), "../..")
+)
 
-	imageData, err := base64.StdEncoding.DecodeString(string(base64Data))
+func fileNameWithoutExtension(filename string) string {
+	return filename[:len(filename)-len(filepath.Ext(filename))]
+}
+
+func FileUpload(c *gin.Context) {
+	//1. Param input for multipart file upload
+	/// Maximum of 200MB file allowed
+
+	//2. Retrieve file from form-data
+
+	userID, _ := strconv.Atoi(c.Param("userId"))
+	chatID, _ := strconv.Atoi(c.Query("chatId"))
+
+	//<Form-id> is the form key that we will read from. Client should use the same form key when uploading the file
+	file, err := c.FormFile("form-id")
 	if err != nil {
-		log.Println("Error decoding base64 data:", err)
+		errStr := fmt.Sprintf("Error in reading the file %s\n", err)
+		fmt.Println(errStr)
+		// fmt.Fprintf(c, errStr)
 		return
 	}
 
-	// Write image data to file
-	var imgPath = "received_image.jpg"
-	err = os.WriteFile(imgPath, imageData, 0644)
-	if err != nil {
-		log.Println("Error writing image data to file:", err)
-		return
-	}
+	localFilePath := saveFile(c, file)
 
-	fmt.Println("Image received and saved successfully")
-	// 	var ctx = context.Background()
-	// resp, err := cld.Upload.Upload(ctx, "my_picture.jpg", uploader.UploadParams{PublicID: "my_image"});
-	img := StoreImgInCloud(imgPath)
-	return img, nil
+	fileUrl := storeImgInCloud(localFilePath)
+
+	go ws.DoThisOnImgMsg(ws.WsManagerIns, &ws.Message{
+		ChatId:    int32(chatID),
+		SenderId:  int32(userID),
+		MediaLink: fileUrl,
+	})
+
+	// fmt.Fprintf(c, result)
 
 }
 
-func StoreImgInCloud(path string) string {
+func saveFile(c *gin.Context, file *multipart.FileHeader) (localImgPath string) {
+
+	tempPath := fmt.Sprintf("assets/uploads/" + file.Filename)
+	err := c.SaveUploadedFile(file, tempPath)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save avatar"})
+		return
+	}
+
+	return tempPath
+
+}
+
+func storeImgInCloud(path string) string {
 	ctx := context.Background()
 
 	file, err := os.ReadFile(path)
@@ -46,7 +82,7 @@ func StoreImgInCloud(path string) string {
 	}
 	utils.LogSomething("error in read file", file, 0)
 	resp, err := MDB.MediaDB.Upload.Upload(ctx, path, uploader.UploadParams{
-		PublicID:       "quickstart_butterfly",
+		PublicID:       "path",
 		UniqueFilename: api.Bool(false),
 		Overwrite:      api.Bool(true)})
 	if err != nil {

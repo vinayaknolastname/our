@@ -6,7 +6,6 @@ import (
 	// grpcHandlers "github.com/vinayaknolastname/our/gateway/grpc"
 	// grpcHandlers "github.com/vinayaknolastname/our/gateway/grpc"
 	grpcHandlers "github.com/vinayaknolastname/our/gateway/grpc"
-	mediaservice "github.com/vinayaknolastname/our/gateway/media_service"
 	"github.com/vinayaknolastname/our/gateway/utils"
 )
 
@@ -28,7 +27,10 @@ func NewWsManager() *WsManager {
 	}
 }
 
+var WsManagerIns *WsManager
+
 func (w *WsManager) RunWsManager() {
+	WsManagerIns = w
 	log.Println("w.Register")
 	go broad(w)
 	for {
@@ -100,7 +102,7 @@ func broad(w *WsManager) {
 		case "msg":
 			doThisOnMsg(w, m)
 		case "img":
-			go doThisOnImgMsg(w, m)
+			// go doThisOnImgMsg(w, m)
 		case "reaction":
 			doThisOnReaction(w, m)
 		}
@@ -119,20 +121,20 @@ func doThisOnMsg(w *WsManager, m *Message) {
 	}
 }
 
-func doThisOnImgMsg(w *WsManager, m *Message) {
+func DoThisOnImgMsg(w *WsManager, m *Message) {
 	if _, ok := w.Chats[m.ChatId]; ok {
 		// grpcHandlers.CreateMessage(userId, chatId, content, tempDeliveredList)
 		//
 		membersOfChat := w.Chats[m.ChatId].Members
 
-		imgLink, err := mediaservice.HandleImgMessage(m.MediaLink)
+		// imgLink, err := mediaservice.HandleImgMessage(m.MediaLink)
 
-		if err != nil {
-			utils.LogSomething("Img Mesage err", "dd", 0)
-		}
+		// if err != nil {
+		// 	utils.LogSomething("Img Mesage err", "dd", 0)
+		// }
 
-		m.MediaLink = imgLink
-		checkOtherUserIsConnectedOrNot(membersOfChat, m.ChatId, w.Chats[m.ChatId].Clients, m.Content, m.SenderId, imgLink)
+		// m.MediaLink = imgLink
+		checkOtherUserIsConnectedOrNot(membersOfChat, m.ChatId, w.Chats[m.ChatId].Clients, m.Content, m.SenderId, m.MediaLink)
 		for _, cl := range w.Chats[m.ChatId].Clients {
 
 			cl.Message <- m
