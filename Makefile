@@ -10,6 +10,11 @@ gen-proto-user:
 		--go_out=protobuf/user --go_opt=paths=source_relative \
 		--go-grpc_out=protobuf/user --go-grpc_opt=paths=source_relative \
 
+gen-proto-video:
+	@protoc	\
+		--proto_path=protobuf "protobuf/video.proto" \
+		--go_out=protobuf/video --go_opt=paths=source_relative \
+		--go-grpc_out=protobuf/video --go-grpc_opt=paths=source_relative \
 
 start-server:
 	go run services/admin/main.go
@@ -34,5 +39,4 @@ build_user:
 	@echo Done!
 
 make_user_docker:
-
-   docker buildx build -t your-image-name -f dockerFile .
+	docker buildx build -t your-image-name -f dockerFile .

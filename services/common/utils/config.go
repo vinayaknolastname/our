@@ -8,7 +8,9 @@ import (
 )
 
 type Config struct {
-	GrpcPort string `mapstructure:"GRPC_SERVER_ADDRESS"`
+	GrpcPort      string `mapstructure:"GRPC_SERVER_ADDRESS"`
+	GrpcPortVideo string `mapstructure:"GRPC_SERVER_ADDRESS_VIDEO"`
+
 	DBConfig *DBConfig
 }
 
