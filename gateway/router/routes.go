@@ -64,6 +64,12 @@ func InitRouter(wshandler ws.Handler) {
 
 	}
 	{
+
+		video := v1.Group("/video")
+		video.POST("/startVideo", grpcHandlers.ConnectUserServiceGrpcMiddleWare, grpcHandlers.CreateUser)
+
+	}
+	{
 		ws := router.Group("/ws")
 		ws.POST("createRoom", wshandler.CreateRoom)
 		ws.GET("startChat/:chatId", wshandler.StartChat)

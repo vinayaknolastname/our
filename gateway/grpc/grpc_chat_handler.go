@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/gin-gonic/gin"
-	user "github.com/vinayaknolastname/our/services/user/proto_gen"
+	user "github.com/vinayaknolastname/our/protobuf/user"
 )
 
 func GetAllChats(c *gin.Context) {

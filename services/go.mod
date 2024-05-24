@@ -41,7 +41,7 @@ require (
 
 require (
 	github.com/lib/pq v1.10.9
-	github.com/vinayaknolastname/our/protobuf v0.0.0-20240519043434-0dbf4368d711
+	github.com/vinayaknolastname/our/protobuf v0.0.0-20240523193853-a9582321ad7b
 	golang.org/x/net v0.22.0 // indirect
 	golang.org/x/sys v0.18.0 // indirect
 	golang.org/x/text v0.14.0 // indirect

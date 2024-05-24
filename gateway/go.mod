@@ -9,7 +9,7 @@ require (
 	github.com/golang/protobuf v1.5.4
 	github.com/lib/pq v1.10.9
 	github.com/sirupsen/logrus v1.9.3
-	github.com/vinayaknolastname/our v0.0.0-20240516090716-d118cf1a3a91
+
 
 )
 
@@ -36,6 +36,7 @@ require (
 	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/u2takey/ffmpeg-go v0.5.0 // indirect
 	github.com/u2takey/go-utils v0.3.1 // indirect
+	github.com/vinayaknolastname/our/protobuf v0.0.0-20240523193853-a9582321ad7b // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.9.0 // indirect
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9 // indirect
@@ -75,5 +76,5 @@ require (
 	github.com/gorilla/websocket v1.5.1
 	github.com/spf13/viper v1.18.2
 	golang.org/x/sys v0.19.0 // indirect
-	google.golang.org/grpc v1.63.2
+	google.golang.org/grpc v1.64.0
 )

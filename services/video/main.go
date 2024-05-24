@@ -1,11 +1,13 @@
-package videoService
+package main
 
 import (
 	"log"
 	"net"
 
+	"github.com/vinayaknolastname/our/protobuf/video"
 	"github.com/vinayaknolastname/our/services/common/db"
 	"github.com/vinayaknolastname/our/services/common/utils"
+	gApi "github.com/vinayaknolastname/our/services/video/gAPi"
 	"google.golang.org/grpc"
 )
 
@@ -24,6 +26,15 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 
-	listener, err := net.Listen("tcp", config.GrpcPort)
+	listener, err := net.Listen("tcp", config.GrpcPortVideo)
 
+	if err != nil {
+		log.Println("tcp listenEroo  %err ", err)
+	}
+
+	server := gApi.NewGApiServer(db.Db)
+
+	video.RegisterVideoServiceServer(grpcServer, server)
+
+	grpcServer.Serve(listener)
 }

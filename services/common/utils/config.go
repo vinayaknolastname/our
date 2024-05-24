@@ -10,8 +10,7 @@ import (
 type Config struct {
 	GrpcPort      string `mapstructure:"GRPC_SERVER_ADDRESS"`
 	GrpcPortVideo string `mapstructure:"GRPC_SERVER_ADDRESS_VIDEO"`
-
-	DBConfig *DBConfig
+	DBConfig      *DBConfig
 }
 
 type DBConfig struct {
@@ -46,6 +45,8 @@ func LoadConfig(path string) (config Config, err error) {
 		log.Fatalf("unable to decode into struct, %v", err)
 	}
 	fmt.Printf("host [%s]\n", config.GrpcPort)
+	fmt.Printf("host [%s]\n", config.GrpcPortVideo)
+
 	// fmt.Printf("Port [%d]\n", ConfigStruct.Port)
 	// fmt.Printf("Enabled [%t]", ConfigStruct.Enabled)
 

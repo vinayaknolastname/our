@@ -66,6 +66,8 @@ github.com/subosito/gotenv v1.6.0 h1:9NlTDc1FTs4qu0DDq7AEtTPNw6SVm7uBMsUCUjABIf8
 github.com/subosito/gotenv v1.6.0/go.mod h1:Dk4QP5c2W3ibzajGcXpNraDfq2IrhjMIvMSWPKKo0FU=
 github.com/vinayaknolastname/our/protobuf v0.0.0-20240519043434-0dbf4368d711 h1:qnCMrspcgLLd3saxwDvNI4U1c+xInb0P0akulg0fdXU=
 github.com/vinayaknolastname/our/protobuf v0.0.0-20240519043434-0dbf4368d711/go.mod h1:rE/eb2im+XXb/anerdQRcAVMLs3iJP3+QGcENrXI+DE=
+github.com/vinayaknolastname/our/protobuf v0.0.0-20240523193853-a9582321ad7b h1:/aa3X7sUgtVvOSrUQXbiMCr2Ypccl2MZyI6aEhtvFDY=
+github.com/vinayaknolastname/our/protobuf v0.0.0-20240523193853-a9582321ad7b/go.mod h1:rE/eb2im+XXb/anerdQRcAVMLs3iJP3+QGcENrXI+DE=
 go.uber.org/atomic v1.9.0 h1:ECmE8Bn/WFTYwEW/bpKD3M8VtR/zQVbavAoalC1PYyE=
 go.uber.org/atomic v1.9.0/go.mod h1:fEN4uk6kAWBTFdckzkM89CLk9XfWZrxpCo0nPH17wJc=
 go.uber.org/multierr v1.9.0 h1:7fIwc/ZtS0q++VgcfqFDxSBZVv/Xo49/SYnDFupUwlI=

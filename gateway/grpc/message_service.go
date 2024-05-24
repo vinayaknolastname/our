@@ -7,7 +7,7 @@ import (
 	// "github.com/gin-gonic/gin"
 	"github.com/vinayaknolastname/our/gateway/types"
 	"github.com/vinayaknolastname/our/gateway/utils"
-	user "github.com/vinayaknolastname/our/services/user/proto_gen"
+	"github.com/vinayaknolastname/our/protobuf/user"
 )
 
 func CreateReaction(service UserGrpcService, reactionData types.ReactionOnMessageStruct) {
