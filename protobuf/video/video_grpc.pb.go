@@ -48,7 +48,7 @@ func (c *videoServiceClient) VideoProccess(ctx context.Context, opts ...grpc.Cal
 
 type VideoService_VideoProccessClient interface {
 	Send(*Video) error
-	Recv() (*CommonResponse, error)
+	Recv() (*CommonResponseVideo, error)
 	grpc.ClientStream
 }
 
@@ -60,8 +60,8 @@ func (x *videoServiceVideoProccessClient) Send(m *Video) error {
 	return x.ClientStream.SendMsg(m)
 }
 
-func (x *videoServiceVideoProccessClient) Recv() (*CommonResponse, error) {
-	m := new(CommonResponse)
+func (x *videoServiceVideoProccessClient) Recv() (*CommonResponseVideo, error) {
+	m := new(CommonResponseVideo)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -101,7 +101,7 @@ func _VideoService_VideoProccess_Handler(srv interface{}, stream grpc.ServerStre
 }
 
 type VideoService_VideoProccessServer interface {
-	Send(*CommonResponse) error
+	Send(*CommonResponseVideo) error
 	Recv() (*Video, error)
 	grpc.ServerStream
 }
@@ -110,7 +110,7 @@ type videoServiceVideoProccessServer struct {
 	grpc.ServerStream
 }
 
-func (x *videoServiceVideoProccessServer) Send(m *CommonResponse) error {
+func (x *videoServiceVideoProccessServer) Send(m *CommonResponseVideo) error {
 	return x.ServerStream.SendMsg(m)
 }
 

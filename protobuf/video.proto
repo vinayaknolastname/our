@@ -4,14 +4,14 @@ option go_package = "github.com/vinayakbot/video";
 
 
 service VideoService{
-    rpc VideoProccess(stream Video) returns (stream CommonResponse);
+    rpc VideoProccess(stream Video) returns (stream CommonResponseVideo);
 }
 
 message Video {
     bytes content = 1;
 }
 
-message CommonResponse{
+message CommonResponseVideo{
     int32 statusCode = 1;
     bool success = 2;
     string message = 3;
