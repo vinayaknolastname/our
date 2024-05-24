@@ -124,6 +124,8 @@ github.com/ugorji/go/codec v1.2.12 h1:9LC83zGrHhuUA9l16C9AHXAqEV/2wBQ4nkvumAE65E
 github.com/ugorji/go/codec v1.2.12/go.mod h1:UNopzCgEMSXjBc6AOMqYvWC1ktqTAfzJZUZgYf6w6lg=
 github.com/vinayaknolastname/our/protobuf v0.0.0-20240524075416-ce4c6530875c h1:W04VBYH7ZGW6jMLLQAo/K++JSIr9xlBHug3313CX6e0=
 github.com/vinayaknolastname/our/protobuf v0.0.0-20240524075416-ce4c6530875c/go.mod h1:rE/eb2im+XXb/anerdQRcAVMLs3iJP3+QGcENrXI+DE=
+github.com/vinayaknolastname/our/protobuf v0.0.0-20240524130839-3ddcdb16d784 h1:89wIoWUeVXF4syt22gxYDFP8oWkrsI5LNynCCrl3ANU=
+github.com/vinayaknolastname/our/protobuf v0.0.0-20240524130839-3ddcdb16d784/go.mod h1:rE/eb2im+XXb/anerdQRcAVMLs3iJP3+QGcENrXI+DE=
 go.uber.org/atomic v1.9.0 h1:ECmE8Bn/WFTYwEW/bpKD3M8VtR/zQVbavAoalC1PYyE=
 go.uber.org/atomic v1.9.0/go.mod h1:fEN4uk6kAWBTFdckzkM89CLk9XfWZrxpCo0nPH17wJc=
 go.uber.org/multierr v1.9.0 h1:7fIwc/ZtS0q++VgcfqFDxSBZVv/Xo49/SYnDFupUwlI=
