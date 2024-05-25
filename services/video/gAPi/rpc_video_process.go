@@ -92,6 +92,7 @@ func (server *GrpcServer) VideoProccess(stream video.VideoService_VideoProccessS
 	for i := 0; i < dur; i++ {
 		chunks <- i
 	}
+	close(chunks)
 	println("weg")
 
 	wg.Wait()
@@ -123,7 +124,11 @@ func changeVideoResolutionOperation() {
 			for video := range videos {
 				file := fmt.Sprintf("%s_%d.mp4", outputPrefix, video)
 				input := filepath.Join(dir, file)
-				changeVideoResolution(input, resolutions[0], resolutions[0])
+
+				go changeVideoResolution(input, resolutions[0], "resolutions", video)
+				go changeVideoResolution(input, resolutions[1], "resolutions", video)
+				go changeVideoResolution(input, resolutions[2], "resolutions", video)
+
 			}
 		}()
 	}
@@ -131,6 +136,8 @@ func changeVideoResolutionOperation() {
 	for i := 0; i < numOfVideo; i++ {
 		videos <- i
 	}
+
+	close(videos)
 	wg.Wait()
 }
 
@@ -150,15 +157,40 @@ func countNumberOfVideos(sourceDirectory string) (int, error) {
 	return fileCount, err
 }
 
-func changeVideoResolution(inputVideo string, resolution string, output string) {
+func changeVideoResolution(inputVideo string, resolution string, output string, countOfFile int) {
 	// outputFilePath := filepath.Join(os.TempDir(), "converted_video_"+resolution+".mp4")
-	cmd := exec.Command("ffmpeg", "-i", inputVideo, "-vf", "scale="+resolution, output)
+	fmt.Println("err in video resolution.", inputVideo)
+	fmt.Println("err in video resolution.", output)
+	fmt.Println("err in video resolution.", resolution)
+
+	err := os.MkdirAll("resolution", os.ModePerm)
+	if err != nil {
+		fmt.Println("err in video resolution.", err)
+
+		// return err
+	}
+
+	dir := filepath.Join("resolution", resolution)
+
+	err = os.MkdirAll(dir, os.ModePerm)
+	if err != nil {
+		fmt.Println("err in video resolution.", err)
+
+		// return err
+	}
+	outputFile := fmt.Sprintf("%s_%d.mp4", output, countOfFile)
+
+	finalFilePath := filepath.Join(dir, outputFile)
+
+	fmt.Println("err in video sss", dir)
+
+	cmd := exec.Command("ffmpeg", "-i", inputVideo, "-vf", fmt.Sprintf("scale=%s", resolution), finalFilePath)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
-	err := cmd.Run()
-	if err != nil {
-		fmt.Println("err in video resolution.")
+	err2 := cmd.Run()
+	if err2 != nil {
+		fmt.Println("err in video resolution.", err2)
 
 	}
 
