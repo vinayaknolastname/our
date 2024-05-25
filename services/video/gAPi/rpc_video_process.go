@@ -57,7 +57,8 @@ func (server *GrpcServer) VideoProccess(stream video.VideoService_VideoProccessS
 		// 	return err
 		// }
 	}
-	resolutions := []string{"640x360", "1280x720", "1920x1080"}
+	resolutions := []string{"640x360"}
+	// resolutions := []string{"640x360", "1280x720", "1920x1080"}
 
 	var wg sync.WaitGroup
 	for i := 0; i < len(resolutions)-2; i++ {
@@ -110,7 +111,7 @@ func (server *GrpcServer) VideoProccess(stream video.VideoService_VideoProccessS
 	// println("wef in video resolution.")
 
 	// changeVideoResolutionOperation()
-
+	generateMasterPlaylist("resolution", resolutions)
 	return nil
 }
 
@@ -127,10 +128,23 @@ func generateMasterPlaylist(outputDir string, resolutions []string) error {
 	for _, res := range resolutions {
 		bandwidth := getBandwidth(res)
 		file.WriteString(fmt.Sprintf("#EXT-X-STREAM-INF:BANDWIDTH=%d,RESOLUTION=%s\n", bandwidth, res))
-		file.WriteString(fmt.Sprintf("%s/index.m3u8\n", res))
+		file.WriteString(fmt.Sprintf("%s/%s_.m3u8\n", res, res))
 	}
 
 	return nil
+}
+
+func getBandwidth(resolution string) int {
+	switch resolution {
+	case "640x360":
+		return 800000 // 800 kbps
+	case "1280x720":
+		return 2800000 // 2800 kbps
+	case "1920x1080":
+		return 5000000 // 5000 kbps
+	default:
+		return 1000000 // default 1 Mbps
+	}
 }
 
 func changeVideoResolutionOperation() {

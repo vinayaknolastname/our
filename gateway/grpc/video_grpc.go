@@ -12,6 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/vinayaknolastname/our/gateway/utils"
 	"github.com/vinayaknolastname/our/protobuf/video"
+
 	"google.golang.org/grpc"
 )
 
@@ -159,6 +160,15 @@ func StartVideoStream(c *gin.Context) {
 	// }()
 	// stream.CloseSend()
 
+}
+
+func PlayVideo(c *gin.Context) {
+	// playlistPath := filepath.Join(hlsDir, "master.m3u8")
+	// if _, err := os.Stat(playlistPath); os.IsNotExist(err) {
+	// http.Error(w, "Master playlist not found", http.StatusNotFound)
+	// return
+	// }
+	c.File(mas)
 }
 
 func splitVideo(inputVideo, outputPrefix string, duration int) error {
