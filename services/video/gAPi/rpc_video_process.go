@@ -16,7 +16,7 @@ import (
 
 func (server *GrpcServer) VideoProccess(stream video.VideoService_VideoProccessServer) error {
 	inputVideo := "received_videos.mp4"
-	outputPrefix := "output_chunk"
+	// outputPrefix := "output_chunk"
 
 	file, err := os.Create(inputVideo)
 	if err != nil {
@@ -57,48 +57,78 @@ func (server *GrpcServer) VideoProccess(stream video.VideoService_VideoProccessS
 		// 	return err
 		// }
 	}
-
-	log.Printf("Erro in writing fildde: %s")
-
-	dur, err := getVideoDuration(inputVideo)
-
-	if err != nil {
-		log.Printf("Erro in writing file: %s", err)
-
-		return err
-	}
-	log.Printf("Erro in writing file: %s", dur)
-
-	numberOfWorker := 4
+	resolutions := []string{"640x360", "1280x720", "1920x1080"}
 
 	var wg sync.WaitGroup
-
-	chunks := make(chan int, numberOfWorker)
-
-	for i := 0; i < numberOfWorker; i++ {
-		log.Printf("l1: %s", i)
-
+	for i := 0; i < len(resolutions)-2; i++ {
 		wg.Add(1)
-		go func() {
-			defer wg.Done()
-
-			for chunk := range chunks {
-				log.Printf("l1: %s", chunks)
-				splitVideo(inputVideo, outputPrefix, chunk)
-			}
-		}()
+		go makeHlsFiles(inputVideo, resolutions[i], &wg)
 	}
-
-	for i := 0; i < dur; i++ {
-		chunks <- i
-	}
-	close(chunks)
-	println("weg")
+	// wg.Done()
 
 	wg.Wait()
-	println("wef in video resolution.")
+	log.Printf("jeeee")
 
-	changeVideoResolutionOperation()
+	// log.Printf("Erro in writing fildde: %s")
+
+	// dur, err := getVideoDuration(inputVideo)
+
+	// if err != nil {
+	// 	log.Printf("Erro in writing file: %s", err)
+
+	// 	return err
+	// }
+	// log.Printf("Erro in writing file: %s", dur)
+
+	// numberOfWorker := 4
+
+	// var wg sync.WaitGroup
+
+	// chunks := make(chan int, numberOfWorker)
+
+	// for i := 0; i < numberOfWorker; i++ {
+	// 	log.Printf("l1: %s", i)
+
+	// 	wg.Add(1)
+	// 	go func() {
+	// 		defer wg.Done()
+
+	// 		for chunk := range chunks {
+	// 			log.Printf("l1: %s", chunks)
+	// 			splitVideo(inputVideo, outputPrefix, chunk)
+	// 		}
+	// 	}()
+	// }
+
+	// for i := 0; i < dur; i++ {
+	// 	chunks <- i
+	// }
+	// close(chunks)
+	// println("weg")
+
+	// wg.Wait()
+	// println("wef in video resolution.")
+
+	// changeVideoResolutionOperation()
+
+	return nil
+}
+
+func generateMasterPlaylist(outputDir string, resolutions []string) error {
+	masterPlaylist := filepath.Join(outputDir, "master.m3u8")
+	file, err := os.Create(masterPlaylist)
+	if err != nil {
+		return fmt.Errorf("failed to create master playlist file: %w", err)
+	}
+	defer file.Close()
+
+	file.WriteString("#EXTM3U\n")
+	file.WriteString("#EXT-X-VERSION:3\n")
+	for _, res := range resolutions {
+		bandwidth := getBandwidth(res)
+		file.WriteString(fmt.Sprintf("#EXT-X-STREAM-INF:BANDWIDTH=%d,RESOLUTION=%s\n", bandwidth, res))
+		file.WriteString(fmt.Sprintf("%s/index.m3u8\n", res))
+	}
 
 	return nil
 }
@@ -139,6 +169,43 @@ func changeVideoResolutionOperation() {
 
 	close(videos)
 	wg.Wait()
+}
+
+func makeHlsFiles(inputVideo string, resolution string, wg *sync.WaitGroup) {
+
+	err := os.MkdirAll("resolution", os.ModePerm)
+	if err != nil {
+		fmt.Println("err in video resolution.", err)
+
+		// return err
+	}
+
+	dir := filepath.Join("resolution", resolution)
+
+	err = os.MkdirAll(dir, os.ModePerm)
+	if err != nil {
+		fmt.Println("err in video resolution.", err)
+
+		// return err
+	}
+	// Split the video into chunks
+	// for i := 0; i < numChunks; i++ {
+	outputFile := fmt.Sprintf("%s_.m3u8", resolution)
+
+	finalFile := filepath.Join(dir, outputFile)
+	cmd := exec.Command("ffmpeg", "-i", inputVideo, "-vf", "scale="+resolution, "-c:a", "aac", "-strict", "experimental", "-ac", "2", "-ar", "44100", "-c:v", "libx264", "-crf", "20", "-preset", "fast", "-hls_time", "10", "-hls_list_size", "0", "-f", "hls", finalFile)
+
+	// cmd := exec.Command("ffmpeg", "-ss", strconv.Itoa(duration), "-i", inputVideo, "-t", "1", "-c", "copy", filepath.Join(outputDir, outputFile))
+	if err := cmd.Run(); err != nil {
+		fmt.Println("Video split into 1-second chunks successfully.", err)
+
+		// return err
+		// }
+	}
+	fmt.Println("Video split into 1-second chunks successfully.")
+	wg.Done()
+	// return nil
+
 }
 
 func countNumberOfVideos(sourceDirectory string) (int, error) {
