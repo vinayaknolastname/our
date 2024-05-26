@@ -67,7 +67,8 @@ func InitRouter(wshandler ws.Handler) {
 
 		video := v1.Group("/video")
 		video.POST("/startVideo", grpcHandlers.ConnectWithVideoGrpcMiddleWare, grpcHandlers.StartVideoStream)
-		video.POST("/playVideo", grpcHandlers.ConnectWithVideoGrpcMiddleWare, grpcHandlers.PlayVideo)
+		video.GET("/playVideo", grpcHandlers.PlayVideo)
+		video.GET("/hls/:resolution/:file", grpcHandlers.HandleSegment)
 
 	}
 	{

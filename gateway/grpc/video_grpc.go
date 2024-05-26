@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -163,12 +164,34 @@ func StartVideoStream(c *gin.Context) {
 }
 
 func PlayVideo(c *gin.Context) {
-	// playlistPath := filepath.Join(hlsDir, "master.m3u8")
+	hlsDir := "resolution"
+	playlistPath := filepath.Join(hlsDir, "master.m3u8")
 	// if _, err := os.Stat(playlistPath); os.IsNotExist(err) {
 	// http.Error(w, "Master playlist not found", http.StatusNotFound)
 	// return
 	// }
-	c.File(mas)
+
+	fmt.Println("Video split into 1-second chunks successfully. %s", playlistPath)
+
+	c.File("resolution/master.m3u8")
+}
+
+func HandleSegment(c *gin.Context) {
+	hlsDir := "resolution"
+
+	resolution := c.Param("resolution")
+	file := c.Param("file")
+
+	playlistPath := filepath.Join(hlsDir, "master.m3u8")
+	// if _, err := os.Stat(playlistPath); os.IsNotExist(err) {
+	// http.Error(w, "Master playlist not found", http.StatusNotFound)
+	// return
+	// }
+
+	fmt.Println("Video split into 1-second chunks successfully. %s", playlistPath)
+
+	filepath := fmt.Sprintf("resolution/%s/%s", resolution, file)
+	c.File(filepath)
 }
 
 func splitVideo(inputVideo, outputPrefix string, duration int) error {
