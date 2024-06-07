@@ -39,4 +39,4 @@ build_user:
 	@echo Done!
 
 make_user_docker:
-	docker buildx build -t your-image-name -f dockerFile .
+	docker buildx build -t user-servive-app -f dockerFile .

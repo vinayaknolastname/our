@@ -1,4 +1,6 @@
 *.yaml
 
 *.mp4
+
 gateway/utils/config.go
+
